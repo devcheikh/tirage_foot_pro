@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion du Quiz - LPA Admin</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0A2342;
+            --secondary: #001B48;
+            --accent: #FFD700;
+            --text: #F8FAFC;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --glass: rgba(0, 27, 72, 0.7);
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", sans-serif;
+            background: var(--primary);
+            color: var(--text);
+            display: flex;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--secondary);
+            height: 100vh;
+            position: fixed;
+            padding: 25px;
+            border-right: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .sidebar h2 {
+            color: var(--accent);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            color: #CBD5E1;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: rgba(255, 215, 0, 0.1);
+            color: #fff;
+        }
+
+        .content {
+            margin-left: 260px;
+            padding: 40px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background: var(--glass);
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            margin-bottom: 30px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: rgba(0, 0, 0, 0.2);
+            color: #fff;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 4px;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            color: var(--accent);
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .status {
+            margin-top: 10px;
+            font-size: 14px;
+            min-height: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text);
+            margin-top: 5px;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .badge-active {
+            background: var(--success);
+            color: white;
+        }
+
+        .badge-inactive {
+            background: var(--danger);
+            color: white;
+        }
+
+        .badge-facile {
+            background: #22c55e;
+            color: white;
+        }
+
+        .badge-moyen {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .badge-difficile {
+            background: #ef4444;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar" id="sidebarMenu">
+        <h2>⚽ LPA</h2>
+        <a href="dashboard.html">🎯 Tirage</a>
+        <a href="manage_matches.html">🏟 Programmer</a>
+        <a href="matches_calendar.html">📅 Calendrier</a>
+        <a href="manage_teams.html">📋 Équipes</a>
+        <a href="manage_players.html">👥 Joueurs</a>
+        <a href="players_stats.html">📊 Stats joueurs</a>
+        <a href="manage_extras.html">🔥 Extras</a>
+        <a href="manage_quiz.html" class="active">🎮 Quiz</a>
+        <a href="manage_boutique.html">🛒 Boutique</a>
+        <a href="manage_reservations.html">📅 Réservations</a>
+        <a href="manage_blog.html">📰 Blog</a>
+        <a href="../index.html">🌍 Page publique</a>
+        <a href="../../backend/auth/logout.php" style="color:red; margin-top:20px;">🚪 Déconnexion</a>
+    </div>
+
+    <div class="content">
+        <h1>🎮 Gestion du Quiz Football</h1>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="statTotal">0</div>
+                <div class="stat-label">Total Questions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statActive">0</div>
+                <div class="stat-label">Actives</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statCategories">0</div>
+                <div class="stat-label">Catégories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statDifficile">0</div>
+                <div class="stat-label">Difficiles</div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <!-- Add/Edit Form -->
+            <div class="card">
+                <h2 id="formTitle">➕ Ajouter une question</h2>
+
+                <input type="hidden" id="qId" value="0">
+
+                <label>Question</label>
+                <textarea id="qQuestion" placeholder="Quelle est la question ?"></textarea>
+
+                <label>Option A</label>
+                <input type="text" id="qOptionA" placeholder="Première réponse">
+
+                <label>Option B</label>
+                <input type="text" id="qOptionB" placeholder="Deuxième réponse">
+
+                <label>Option C</label>
+                <input type="text" id="qOptionC" placeholder="Troisième réponse">
+
+                <label>Option D</label>
+                <input type="text" id="qOptionD" placeholder="Quatrième réponse">
+
+                <label>Bonne réponse</label>
+                <select id="qCorrect">
+                    <option value="0">A</option>
+                    <option value="1">B</option>
+                    <option value="2">C</option>
+                    <option value="3">D</option>
+                </select>
+
+                <label>Difficulté</label>
+                <select id="qDifficulty">
+                    <option value="facile">Facile</option>
+                    <option value="moyen" selected>Moyen</option>
+                    <option value="difficile">Difficile</option>
+                </select>
+
+                <label>Catégorie</label>
+                <input type="text" id="qCategory" placeholder="Ex: Histoire, Règles, Joueurs...">
+
+                <button class="btn btn-accent" id="btnSave" onclick="saveQuestion()">Ajouter la question</button>
+                <button class="btn btn-danger" id="btnCancel" onclick="cancelEdit()"
+                    style="display:none; margin-top:10px;">Annuler</button>
+                <div id="formStatus" class="status"></div>
+            </div>
+
+            <!-- Preview -->
+            <div class="card">
+                <h2>👁️ Aperçu</h2>
+                <div id="preview"
+                    style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px; min-height: 200px;">
+                    <p style="color: var(--accent); font-size: 1.2rem; font-weight: bold;" id="previewQ">La question
+                        apparaîtra ici...</p>
+                    <div style="margin-top: 20px;">
+                        <div style="padding: 10px; margin: 5px 0; background: rgba(255,255,255,0.05); border-radius: 5px;"
+                            id="previewA">A: -</div>
+                        <div style="padding: 10px; margin: 5px 0; background: rgba(255,255,255,0.05); border-radius: 5px;"
+                            id="previewB">B: -</div>
+                        <div style="padding: 10px; margin: 5px 0; background: rgba(255,255,255,0.05); border-radius: 5px;"
+                            id="previewC">C: -</div>
+                        <div style="padding: 10px; margin: 5px 0; background: rgba(255,255,255,0.05); border-radius: 5px;"
+                            id="previewD">D: -</div>
+                    </div>
+                    <p style="margin-top: 15px; color: var(--success);" id="previewCorrect">Bonne réponse: -</p>
+                    <p style="color: var(--text);" id="previewMeta">Difficulté: - | Catégorie: -</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questions List -->
+        <div class="card">
+            <h2>📋 Liste des questions</h2>
+            <div id="questionsList"></div>
+        </div>
+    </div>
+
+    <script>
+        const API = "../../backend/api/";
+
+        async function fetchJSON(url, options = {}) {
+            const res = await fetch(url, {
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                ...options
+            });
+            return res.json();
+        }
+
+        // Live Preview
+        ['qQuestion', 'qOptionA', 'qOptionB', 'qOptionC', 'qOptionD', 'qCorrect', 'qDifficulty', 'qCategory'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updatePreview);
+            document.getElementById(id).addEventListener('change', updatePreview);
+        });
+
+        function updatePreview() {
+            const q = document.getElementById('qQuestion').value || 'La question apparaîtra ici...';
+            const a = document.getElementById('qOptionA').value || '-';
+            const b = document.getElementById('qOptionB').value || '-';
+            const c = document.getElementById('qOptionC').value || '-';
+            const d = document.getElementById('qOptionD').value || '-';
+            const correct = document.getElementById('qCorrect').value;
+            const difficulty = document.getElementById('qDifficulty').value;
+            const category = document.getElementById('qCategory').value || '-';
+
+            document.getElementById('previewQ').textContent = q;
+            document.getElementById('previewA').textContent = 'A: ' + a;
+            document.getElementById('previewB').textContent = 'B: ' + b;
+            document.getElementById('previewC').textContent = 'C: ' + c;
+            document.getElementById('previewD').textContent = 'D: ' + d;
+
+            const letters = ['A', 'B', 'C', 'D'];
+            document.getElementById('previewCorrect').textContent = 'Bonne réponse: ' + letters[correct];
+            document.getElementById('previewMeta').textContent = `Difficulté: ${difficulty} | Catégorie: ${category}`;
+        }
+
+        async function loadQuestions() {
+            const data = await fetchJSON(API + "quiz_list.php?admin=1");
+            const list = document.getElementById('questionsList');
+
+            if (!data.success || data.data.length === 0) {
+                list.innerHTML = "<p>Aucune question pour le moment.</p>";
+                updateStats([]);
+                return;
+            }
+
+            updateStats(data.data);
+
+            list.innerHTML = `<table>
+                <thead>
+                    <tr>
+                        <th>Question</th>
+                        <th>Catégorie</th>
+                        <th>Difficulté</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${data.data.map(q => `
+                        <tr>
+                            <td>${q.question.substring(0, 60)}...</td>
+                            <td>${q.category}</td>
+                            <td><span class="badge badge-${q.difficulty}">${q.difficulty}</span></td>
+                            <td><span class="badge ${q.is_active ? 'badge-active' : 'badge-inactive'}">${q.is_active ? 'Active' : 'Inactive'}</span></td>
+                            <td>
+                                <button class="btn-success" onclick="editQuestion(${q.id})">✏️</button>
+                                <button class="btn-danger" onclick="deleteQuestion(${q.id})">🗑️</button>
+                                <button class="btn-accent" onclick="toggleQuestion(${q.id}, ${q.is_active ? 0 : 1})">${q.is_active ? '❌' : '✅'}</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>`;
+        }
+
+        function updateStats(questions) {
+            document.getElementById('statTotal').textContent = questions.length;
+            document.getElementById('statActive').textContent = questions.filter(q => q.is_active).length;
+
+            const categories = [...new Set(questions.map(q => q.category))];
+            document.getElementById('statCategories').textContent = categories.length;
+
+            document.getElementById('statDifficile').textContent = questions.filter(q => q.difficulty === 'difficile').length;
+        }
+
+        async function saveQuestion() {
+            const id = parseInt(document.getElementById('qId').value);
+            const payload = {
+                question: document.getElementById('qQuestion').value.trim(),
+                option_a: document.getElementById('qOptionA').value.trim(),
+                option_b: document.getElementById('qOptionB').value.trim(),
+                option_c: document.getElementById('qOptionC').value.trim(),
+                option_d: document.getElementById('qOptionD').value.trim(),
+                correct_option: parseInt(document.getElementById('qCorrect').value),
+                difficulty: document.getElementById('qDifficulty').value,
+                category: document.getElementById('qCategory').value.trim()
+            };
+
+            if (id > 0) payload.id = id;
+
+            const endpoint = id > 0 ? "quiz_update.php" : "quiz_add.php";
+            const data = await fetchJSON(API + endpoint, {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+
+            const status = document.getElementById('formStatus');
+            if (data.success) {
+                status.style.color = "lime";
+                status.textContent = id > 0 ? "Question mise à jour !" : "Question ajoutée !";
+                resetForm();
+                loadQuestions();
+            } else {
+                status.style.color = "red";
+                status.textContent = "Erreur: " + data.message;
+            }
+        }
+
+        async function editQuestion(id) {
+            const data = await fetchJSON(API + "quiz_list.php?admin=1");
+            const q = data.data.find(item => item.id === id);
+            if (!q) return;
+
+            document.getElementById('qId').value = q.id;
+            document.getElementById('qQuestion').value = q.question;
+            document.getElementById('qOptionA').value = q.option_a;
+            document.getElementById('qOptionB').value = q.option_b;
+            document.getElementById('qOptionC').value = q.option_c;
+            document.getElementById('qOptionD').value = q.option_d;
+            document.getElementById('qCorrect').value = q.correct_option;
+            document.getElementById('qDifficulty').value = q.difficulty;
+            document.getElementById('qCategory').value = q.category;
+
+            document.getElementById('formTitle').textContent = "✏️ Modifier la question";
+            document.getElementById('btnSave').textContent = "Enregistrer les modifications";
+            document.getElementById('btnCancel').style.display = "block";
+
+            updatePreview();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function deleteQuestion(id) {
+            if (!confirm("Supprimer cette question ?")) return;
+            const data = await fetchJSON(API + "quiz_delete.php?id=" + id);
+            if (data.success) loadQuestions();
+        }
+
+        async function toggleQuestion(id, status) {
+            const data = await fetchJSON(API + "quiz_toggle.php", {
+                method: "POST",
+                body: JSON.stringify({ id, is_active: status })
+            });
+            if (data.success) loadQuestions();
+        }
+
+        function cancelEdit() {
+            resetForm();
+        }
+
+        function resetForm() {
+            document.getElementById('qId').value = 0;
+            document.getElementById('qQuestion').value = '';
+            document.getElementById('qOptionA').value = '';
+            document.getElementById('qOptionB').value = '';
+            document.getElementById('qOptionC').value = '';
+            document.getElementById('qOptionD').value = '';
+            document.getElementById('qCorrect').value = 0;
+            document.getElementById('qDifficulty').value = 'moyen';
+            document.getElementById('qCategory').value = '';
+            document.getElementById('formTitle').textContent = "➕ Ajouter une question";
+            document.getElementById('btnSave').textContent = "Ajouter la question";
+            document.getElementById('btnCancel').style.display = "none";
+            document.getElementById('formStatus').textContent = "";
+            updatePreview();
+        }
+
+        loadQuestions();
+    </script>
+</body>
+
+</html>

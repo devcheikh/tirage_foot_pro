@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion Réservations - LPA Admin</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0A2342;
+            --secondary: #001B48;
+            --accent: #FFD700;
+            --text: #F8FAFC;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --glass: rgba(0, 27, 72, 0.7);
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", sans-serif;
+            background: var(--primary);
+            color: var(--text);
+            display: flex;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--secondary);
+            height: 100vh;
+            position: fixed;
+            padding: 25px;
+            border-right: 1px solid rgba(255, 215, 0, 0.2);
+            z-index: 1001;
+        }
+
+        .sidebar h2 {
+            color: var(--accent);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            color: #CBD5E1;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: rgba(255, 215, 0, 0.1);
+            color: #fff;
+        }
+
+        .content {
+            margin-left: 260px;
+            padding: 40px;
+            min-height: 100vh;
+            width: calc(100% - 260px);
+            box-sizing: border-box;
+        }
+
+        .card {
+            background: var(--glass);
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            color: var(--accent);
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .badge-pending {
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--accent);
+        }
+
+        .badge-confirmed {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .btn-confirm {
+            background: var(--success);
+            color: #fff;
+        }
+
+        .btn-cancel {
+            background: var(--danger);
+            color: #fff;
+            margin-left: 5px;
+        }
+
+        /* ✨ PREMIUM TABLE STYLING */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+            margin-top: 15px;
+        }
+
+        th {
+            text-align: left;
+            padding: 15px;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+
+        td {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        tr td:first-child {
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px 0 0 12px;
+        }
+
+        tr td:last-child {
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 0 12px 12px 0;
+        }
+
+        /* 🕰️ SLOTS MANAGEMENT STYLING */
+        .slot-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px dashed rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-add-slot {
+            background: var(--accent);
+            color: var(--primary);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .slot-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-delete-slot {
+            background: var(--danger);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        select,
+        input {
+            background: #001B48;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar" id="sidebarMenu"></div>
+
+    <div class="content">
+        <h1>📅 Gestion des Réservations de Stades</h1>
+
+        <div class="card">
+            <h2>📋 Demandes en attente & Historique</h2>
+            <div id="resList">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Contact</th>
+                            <th>Terrain</th>
+                            <th>Date & Heure</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resTableBody">
+                        <!-- Chargé par JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🕰️ Configuration des Créneaux & Tarifs</h2>
+            <div style="margin-bottom: 20px;">
+                <label>Sélectionner un stade :</label>
+                <select id="slotStadiumSelect" onchange="loadSlots()"></select>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Début</th>
+                        <th>Fin</th>
+                        <th>Prix (FCFA)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="slotsTableBody">
+                    <!-- Chargé par JS -->
+                </tbody>
+            </table>
+
+            <div class="slot-form">
+                <div>
+                    <label>Heure Début</label>
+                    <input type="time" id="newSlotStart">
+                </div>
+                <div>
+                    <label>Heure Fin</label>
+                    <input type="time" id="newSlotEnd">
+                </div>
+                <div>
+                    <label>Prix (FCFA)</label>
+                    <input type="number" id="newSlotPrice" placeholder="Ex: 15000">
+                </div>
+                <div style="display:flex; align-items:flex-end;">
+                    <button class="btn-add-slot" onclick="saveSlot()">Ajouter le créneau</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API = "../../backend/api/";
+
+        function loadMenu() {
+            document.getElementById("sidebarMenu").innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 30px;">
+                    <h2 style="margin:0; color:var(--accent);">⚽ LPA</h2>
+                </div>
+                <a href="dashboard.html">🎯 Tirage au Sort</a>
+                <a href="manage_matches.html">🏟 Programmer Matchs</a>
+                <a href="matches_calendar.html">📅 Calendrier & Résultats</a>
+                <a href="manage_teams.html">📋 Gestion Équipes</a>
+                <a href="manage_players.html">👥 Gestion Joueurs</a>
+                <a href="players_stats.html">📊 Statistiques Joueurs</a>
+                <a href="manage_extras.html">🔥 Gestion Extras</a>
+                <a href="manage_boutique.html">🛒 Gestion Boutique</a>
+                <a href="manage_reservations.html" class="active">📅 Réservations Stades</a>
+                <a href="manage_blog.html">📰 Gestion Blog</a>
+                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
+                <a href="../index.html">🌍 Page Publique</a>
+                <a href="../../backend/auth/logout.php" style="color:var(--danger); margin-top:10px;">🚪 Déconnexion</a>
+            `;
+        }
+
+        async function loadReservations() {
+            const tbody = document.getElementById("resTableBody");
+            tbody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Chargement des données...</td></tr>";
+
+            const res = await fetch(API + "reservations_list.php");
+            const data = await res.json();
+
+            if (!data.data || data.data.length === 0) {
+                tbody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Aucune réservation trouvée.</td></tr>";
+                return;
+            }
+
+            tbody.innerHTML = data.data.map(r => `
+                <tr>
+                    <td>${r.customer_name}</td>
+                    <td>${r.customer_phone}</td>
+                    <td>${r.stadium_name || 'Inconnu'}</td>
+                    <td>${r.reservation_date} - ${r.start_time.substring(0, 5)} à ${r.end_time.substring(0, 5)}</td>
+                    <td><span class="badge badge-${r.status}">${r.status === 'pending' ? 'En attente' : (r.status === 'confirmed' ? 'Confirmé' : 'Annulé')}</span></td>
+                    <td>
+                        ${r.status === 'pending' ? `
+                            <button class="btn-action btn-confirm" onclick="updateResStatus(${r.id}, 'confirmed')">Confirmer</button>
+                            <button class="btn-action btn-cancel" onclick="updateResStatus(${r.id}, 'cancelled')">Refuser</button>
+                        ` : `
+                            <button class="btn-action btn-cancel" style="background:#64748b;" onclick="updateResStatus(${r.id}, 'pending')">Réinitialiser</button>
+                        `}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function updateResStatus(id, status) {
+            const res = await fetch(API + "reservation_update_status.php", {
+                method: "POST",
+                body: JSON.stringify({ id, status })
+            });
+            const data = await res.json();
+            if (data.success) {
+                loadReservations();
+            } else {
+                alert(data.message);
+            }
+        }
+
+        // --- GESTION DES CRÉNEAUX ---
+
+        async function loadStadiumsForSlots() {
+            const res = await fetch(API + "locations_list.php");
+            const data = await res.json();
+            const select = document.getElementById("slotStadiumSelect");
+            select.innerHTML = data.data.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+            loadSlots();
+        }
+
+        async function loadSlots() {
+            const stadium_id = document.getElementById("slotStadiumSelect").value;
+            const tbody = document.getElementById("slotsTableBody");
+            tbody.innerHTML = "<tr><td colspan='4'>Chargement...</td></tr>";
+
+            const res = await fetch(API + "slots_list_admin.php?stadium_id=" + stadium_id);
+            const data = await res.json();
+
+            if (!data.data || data.data.length === 0) {
+                tbody.innerHTML = "<tr><td colspan='4'>Aucun créneau configuré.</td></tr>";
+                return;
+            }
+
+            tbody.innerHTML = data.data.map(s => `
+                <tr>
+                    <td>${s.start_time.substring(0, 5)}</td>
+                    <td>${s.end_time.substring(0, 5)}</td>
+                    <td><b>${s.price} FCFA</b></td>
+                    <td>
+                        <button class="btn-delete-slot" onclick="deleteSlot(${s.id})">Supprimer</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function saveSlot() {
+            const stadium_id = document.getElementById("slotStadiumSelect").value;
+            const start_time = document.getElementById("newSlotStart").value;
+            const end_time = document.getElementById("newSlotEnd").value;
+            const price = document.getElementById("newSlotPrice").value;
+
+            if (!start_time || !end_time || !price) {
+                alert("Veuillez remplir tous les champs.");
+                return;
+            }
+
+            const res = await fetch(API + "slot_save.php", {
+                method: "POST",
+                body: JSON.stringify({ stadium_id, start_time, end_time, price })
+            });
+            const data = await res.json();
+            if (data.success) {
+                loadSlots();
+                document.getElementById("newSlotStart").value = "";
+                document.getElementById("newSlotEnd").value = "";
+                document.getElementById("newSlotPrice").value = "";
+            } else {
+                alert(data.message);
+            }
+        }
+
+        async function deleteSlot(id) {
+            if (!confirm("Supprimer ce créneau ?")) return;
+            const res = await fetch(API + "slot_delete.php", {
+                method: "POST",
+                body: JSON.stringify({ id })
+            });
+            const data = await res.json();
+            if (data.success) {
+                loadSlots();
+            } else {
+                alert(data.message);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadMenu();
+            loadReservations();
+            loadStadiumsForSlots();
+        });
+    </script>
+</body>
+
+</html>

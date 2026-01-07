@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Programmer les matchs – LPA</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #0A2342;
+      color: #F8FAFC;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: #001B48;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 25px;
+      border-right: 2px solid #FFD70040;
+    }
+
+    .sidebar h2 {
+      color: #FFD700;
+      text-align: center;
+      font-size: 26px;
+      margin-bottom: 40px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      color: #F8FAFC;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: 0.25s;
+      font-size: 16px;
+    }
+
+    .sidebar a:hover {
+      background: #FFD70033;
+    }
+
+    .sidebar .logout {
+      background: #8A0303;
+      font-weight: bold;
+      margin-top: 40px;
+    }
+
+    .sidebar .logout:hover {
+      background: #FF4C4C;
+    }
+
+    .content {
+      margin-left: 260px;
+      padding: 40px;
+      width: 100%;
+    }
+
+    h1 {
+      color: #FFD700;
+      font-size: 34px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #C7D3E8;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: #001B48;
+      border-radius: 12px;
+      border: 1px solid #FFD70033;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .card h2 {
+      color: #FFD700;
+      margin-bottom: 15px;
+    }
+
+    label {
+      font-weight: bold;
+      color: #FFD700;
+      margin-top: 12px;
+      display: block;
+    }
+
+    select,
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid #FFD70055;
+      background: #0A2342;
+      color: #F8FAFC;
+    }
+
+    .btn-main {
+      padding: 12px 20px;
+      background: #FFD700;
+      color: #001B48;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      margin-top: 18px;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(255, 215, 0, 0.4);
+      transition: 0.2s;
+    }
+
+    .btn-main:hover {
+      background: #FFE45C;
+      transform: translateY(-2px);
+    }
+
+    .status {
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    .match-mini {
+      background: #0A2342;
+      border-radius: 8px;
+      border: 1px solid #FFD70033;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .match-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-small {
+      padding: 5px 10px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .btn-edit {
+      background: #3b82f6 !important;
+      color: white !important;
+      display: inline-block !important;
+    }
+
+    .btn-delete {
+      background: #ef4444 !important;
+      color: white !important;
+      display: inline-block !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="sidebar">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 30px;">
+      <h2 style="margin:0; color:#FFD700;">⚽ LPA</h2>
+    </div>
+    <a href="dashboard.html">🎯 Tirage au Sort</a>
+    <a href="manage_matches.html" class="active">🏟 Programmer Matchs</a>
+    <a href="matches_calendar.html">📅 Calendrier & Résultats</a>
+    <a href="manage_teams.html">📋 Gestion Équipes</a>
+    <a href="manage_players.html">👥 Gestion Joueurs</a>
+    <a href="players_stats.html">📊 Statistiques Joueurs</a>
+    <a href="manage_extras.html">🔥 Gestion Extras</a>
+    <a href="manage_boutique.html">🛒 Gestion Boutique</a>
+    <a href="manage_reservations.html">📅 Réservations Stades</a>
+    <a href="manage_blog.html">📰 Gestion Blog</a>
+    <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
+    <a href="../index.html">🌍 Page Publique</a>
+    <a href="../../backend/auth/logout.php" style="color:#ef4444; margin-top:10px;">🚪 Déconnexion</a>
+  </div>
+
+  <div class="content">
+    <h1>Programmer les matchs</h1>
+    <p class="subtitle">Sélectionne la catégorie, le tirage, la poule, puis les équipes.</p>
+
+    <div class="card">
+      <h2 id="formTitle">🏟 Nouveau match</h2>
+      <input type="hidden" id="mmId" value="0">
+
+      <label>Catégorie</label>
+      <select id="mmCategory"></select>
+
+      <label>Tirage</label>
+      <select id="mmDraw"></select>
+
+      <label>Poule</label>
+      <select id="mmPoule"></select>
+
+      <label>Équipe à domicile</label>
+      <select id="mmTeamHome"></select>
+
+      <label>Équipe à l'extérieur</label>
+      <select id="mmTeamAway"></select>
+
+      <label>Date du match</label>
+      <input id="mmDate" type="date">
+
+      <label>Heure</label>
+      <input id="mmTime" type="time">
+
+      <label>Lieu</label>
+      <input id="mmLocation" type="text" placeholder="Stade, terrain...">
+
+      <button class="btn-main" id="btnCreateMatch">✅ Créer le match</button>
+
+      <div id="mmStatus" class="status"></div>
+    </div>
+
+    <div class="card">
+      <h2>📋 Matchs déjà programmés (poule sélectionnée)</h2>
+      <div id="mmList"></div>
+    </div>
+  </div>
+
+  <script src="../assets/js/manage_matches.js?v=1.1"></script>
+</body>
+
+</html>

@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Statistiques Joueurs - LPA Admin</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: #0A2342;
+      --secondary: #001B48;
+      --accent: #FFD700;
+      --accent-glow: rgba(255, 215, 0, 0.3);
+      --text: #F8FAFC;
+      --danger: #ef4444;
+      --success: #22c55e;
+      --glass: rgba(0, 27, 72, 0.7);
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--primary);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar focus */
+    .sidebar {
+      width: 260px;
+      background: var(--secondary);
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 25px;
+      border-right: 1px solid rgba(255, 215, 0, 0.2);
+      z-index: 100;
+    }
+
+    .sidebar h2 {
+      color: var(--accent);
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 40px;
+      letter-spacing: 2px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      color: #CBD5E1;
+      text-decoration: none;
+      border-radius: 10px;
+      transition: 0.3s;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar a i {
+      width: 20px;
+      text-align: center;
+      color: var(--accent);
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background: rgba(255, 215, 0, 0.1);
+      color: #fff;
+    }
+
+    .sidebar .logout {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+      margin-top: 40px;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .sidebar .logout:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .content {
+      margin-left: 260px;
+      padding: 40px;
+      width: calc(100% - 260px);
+      box-sizing: border-box;
+    }
+
+    h1 {
+      color: var(--accent);
+      font-size: 32px;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #94A3B8;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+
+    /* Cards & Layout */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 215, 0, 0.15);
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      margin-bottom: 25px;
+    }
+
+    .card h2 {
+      color: var(--accent);
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card h2 i {
+      font-size: 18px;
+    }
+
+    /* Form Fields */
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
+      color: var(--accent);
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    select,
+    input {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      background: rgba(10, 35, 66, 0.5);
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    select:focus,
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    /* Chips */
+    .chips-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    .chip:hover {
+      background: rgba(255, 215, 0, 0.1);
+    }
+
+    .chip.active {
+      background: var(--accent);
+      color: var(--primary);
+      font-weight: 700;
+      border-color: var(--accent);
+    }
+
+    .btn-main {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: var(--primary);
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+      box-shadow: 0 4px 15px var(--accent-glow);
+    }
+
+    .btn-main:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.1);
+    }
+
+    .status {
+      margin-top: 15px;
+      font-weight: 600;
+      text-align: center;
+      border-radius: 8px;
+      padding: 10px;
+      display: none;
+    }
+
+    /* Table styling */
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table.toplist {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    table.toplist th,
+    table.toplist td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    table.toplist th {
+      color: var(--accent);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    table.toplist tr:hover td {
+      background: rgba(255, 215, 0, 0.03);
+    }
+
+    .badge-rank {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
+      text-align: center;
+      border-radius: 50%;
+      font-weight: 800;
+      background: rgba(255, 215, 0, 0.1);
+      color: var(--accent);
+    }
+
+    /* Chart Container */
+    .chart-box {
+      height: 300px;
+      width: 100%;
+      position: relative;
+    }
+
+    @media (max-width: 1024px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="sidebar">
+    <h2>⚽ LPA</h2>
+    <a href="dashboard.html">🎯 Tirage</a>
+    <a href="manage_matches.html">🏟 Programmer</a>
+    <a href="matches_calendar.html">📅 Calendrier</a>
+    <a href="manage_teams.html">📋 Équipes</a>
+    <a href="manage_players.html">👥 Joueurs</a>
+    <a href="players_stats.html">📊 Stats joueurs</a>
+    <a href="manage_extras.html">🔥 Extras</a>
+    <a href="manage_boutique.html">🛒 Boutique</a>
+    <a href="manage_reservations.html">📅 Réservations</a>
+    <a href="manage_blog.html">📰 Blog</a>
+    <a href="../index.html">🌍 Page publique</a>
+    <a href="../../backend/auth/logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+  </div>
+
+  <div class="content">
+    <h1>Statistiques des joueurs</h1>
+    <p class="subtitle">Gestion professionnelle des performances par match et classements.</p>
+
+    <div class="stats-grid">
+      <!-- Form Side -->
+      <div class="card">
+        <h2><i class="fas fa-edit"></i> Enregistrer Stats</h2>
+
+        <div class="form-group">
+          <label>Catégorie</label>
+          <div id="catChips" class="chips-container">
+            <!-- Chips load here -->
+          </div>
+          <input type="hidden" id="stCategory">
+        </div>
+
+        <div class="form-group">
+          <label>Match</label>
+          <select id="stMatch">
+            <option value="">Sélectionnez une catégorie...</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Joueur</label>
+          <select id="stPlayer">
+            <option value="">Sélectionnez un match...</option>
+          </select>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div class="form-group">
+            <label><i class="fas fa-futbol"></i> Buts</label>
+            <input id="stGoals" type="number" min="0" value="0">
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-handshake"></i> Passes</label>
+            <input id="stAssists" type="number" min="0" value="0">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+          <div class="form-group">
+            <label>Jaune</label>
+            <input id="stYellow" type="number" min="0" value="0">
+          </div>
+          <div class="form-group">
+            <label>Rouge</label>
+            <input id="stRed" type="number" min="0" value="0">
+          </div>
+          <div class="form-group">
+            <label>Minutes</label>
+            <input id="stMinutes" type="number" min="0" value="0">
+          </div>
+        </div>
+
+        <button class="btn-main" id="btnSaveStats">
+          <i class="fas fa-save"></i> Enregistrer les statistiques
+        </button>
+        <div id="stStatus" class="status"></div>
+      </div>
+
+      <!-- Chart Side -->
+      <div class="card">
+        <h2><i class="fas fa-chart-line"></i> Aperçu Graphique</h2>
+        <div class="chart-box">
+          <canvas id="scorersChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2><i class="fas fa-trophy"></i> Top 10 Buteurs</h2>
+        <div id="topCatChips" class="chips-container" style="margin-bottom: 0;">
+          <!-- Chips for filtering table -->
+        </div>
+        <input type="hidden" id="stTopCategory">
+      </div>
+      <div class="table-container" id="stTopList">
+        <!-- Table content -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = "../../backend/api/";
+    function qs(id) { return document.getElementById(id); }
+    async function fetchJSON(url, options = {}) {
+      const res = await fetch(url, {
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        ...options
+      });
+      return res.json();
+    }
+
+    let stMatches = [];
+    let stPlayersCache = {};
+    let scorersChart = null;
+
+    async function loadCategories() {
+      const data = await fetchJSON(API + "/categories_list.php");
+      if (!data.success) return;
+
+      const container1 = qs("catChips");
+      const container2 = qs("topCatChips");
+      container1.innerHTML = "";
+      container2.innerHTML = '<div class="chip active" data-id="0">Toutes</div>';
+
+      (data.data || []).forEach(c => {
+        // Form chips
+        const chip1 = document.createElement("div");
+        chip1.className = "chip";
+        chip1.dataset.id = c.id;
+        chip1.textContent = `${c.name}`;
+        chip1.onclick = () => {
+          container1.querySelectorAll(".chip").forEach(el => el.classList.remove("active"));
+          chip1.classList.add("active");
+          qs("stCategory").value = c.id;
+          loadMatchesForCategory(c.id);
+        };
+        container1.appendChild(chip1);
+
+        // Top list chips
+        const chip2 = document.createElement("div");
+        chip2.className = "chip";
+        chip2.dataset.id = c.id;
+        chip2.textContent = `${c.name}`;
+        chip2.onclick = () => {
+          container2.querySelectorAll(".chip").forEach(el => el.classList.remove("active"));
+          chip2.classList.add("active");
+          qs("stTopCategory").value = c.id;
+          loadTopScorers(c.id);
+        };
+        container2.appendChild(chip2);
+      });
+    }
+
+    async function loadMatchesForCategory(catId) {
+      const sel = qs("stMatch");
+      sel.innerHTML = '<option value="">Chargement...</option>';
+      qs("stPlayer").innerHTML = '<option value="">Attente match...</option>';
+
+      const data = await fetchJSON(API + "/match_list.php?category_id=" + catId);
+      if (!data.success || (data.data || []).length === 0) {
+        sel.innerHTML = '<option value="">Aucun match trouvé</option>';
+        return;
+      }
+
+      stMatches = data.data;
+      sel.innerHTML = '<option value="">-- Choisir un match --</option>';
+      stMatches.forEach(m => {
+        const opt = document.createElement("option");
+        opt.value = m.id;
+        opt.textContent = `${m.home_name} vs ${m.away_name} (${m.match_date || '?'})`;
+        sel.appendChild(opt);
+      });
+    }
+
+    async function loadPlayersForMatch(matchId) {
+      const sel = qs("stPlayer");
+      sel.innerHTML = '<option value="">Chargement joueurs...</option>';
+
+      const match = stMatches.find(m => String(m.id) === String(matchId));
+      if (!match) {
+        sel.innerHTML = '<option value="">Match introuvable</option>';
+        return;
+      }
+
+      const teamIds = [match.team_home, match.team_away];
+      const teamNames = [match.home_name, match.away_name];
+      sel.innerHTML = '<option value="">-- Choisir un joueur --</option>';
+
+      for (let i = 0; i < teamIds.length; i++) {
+        const tid = teamIds[i];
+        if (!stPlayersCache[tid]) {
+          const data = await fetchJSON(API + "/players_list.php?team_id=" + tid);
+          stPlayersCache[tid] = data.success ? (data.data || []) : [];
+        }
+
+        const group = document.createElement("optgroup");
+        group.label = teamNames[i];
+        stPlayersCache[tid].forEach(p => {
+          const opt = document.createElement("option");
+          opt.value = p.id;
+          opt.textContent = `#${p.number || ''} ${p.name}`;
+          group.appendChild(opt);
+        });
+        sel.appendChild(group);
+      }
+    }
+
+    async function saveStats() {
+      const status = qs("stStatus");
+      const payload = {
+        match_id: parseInt(qs("stMatch").value),
+        player_id: parseInt(qs("stPlayer").value),
+        goals: parseInt(qs("stGoals").value) || 0,
+        assists: parseInt(qs("stAssists").value) || 0,
+        yellow_cards: parseInt(qs("stYellow").value) || 0,
+        red_cards: parseInt(qs("stRed").value) || 0,
+        minutes_played: parseInt(qs("stMinutes").value) || 0
+      };
+
+      if (!payload.match_id || !payload.player_id) {
+        showStatus("Veuillez sélectionner un match et un joueur", "error");
+        return;
+      }
+
+      showStatus("Enregistrement...", "pending");
+
+      const res = await fetchJSON(API + "/player_stats_save.php", {
+        method: "POST",
+        body: JSON.stringify(payload)
+      });
+
+      if (res.success) {
+        showStatus("Statistiques enregistrées avec succès !", "success");
+        const currentTopCat = qs("stTopCategory").value || null;
+        loadTopScorers(currentTopCat);
+      } else {
+        showStatus("Erreur: " + res.message, "error");
+      }
+    }
+
+    function showStatus(msg, type) {
+      const s = qs("stStatus");
+      s.textContent = msg;
+      s.style.display = "block";
+      s.style.background = type === "success" ? "rgba(34, 197, 94, 0.2)" :
+        type === "error" ? "rgba(239, 68, 68, 0.2)" : "rgba(255, 215, 0, 0.1)";
+      s.style.color = type === "success" ? "#4ade80" :
+        type === "error" ? "#f87171" : "#FFD700";
+      if (type === "success") setTimeout(() => s.style.display = "none", 3000);
+    }
+
+    async function loadTopScorers(catId = null) {
+      const url = catId && catId !== "0" ? `${API}/player_stats_top.php?category_id=${catId}` : `${API}/player_stats_top.php`;
+      const data = await fetchJSON(url);
+      const container = qs("stTopList");
+
+      if (!data.success || !data.data || data.data.length === 0) {
+        container.innerHTML = "<p style='text-align:center; padding:20px; color:#94A3B8;'>Aucune donnée disponible pour cette catégorie.</p>";
+        updateChart([], []);
+        return;
+      }
+
+      // Build Table
+      let html = `<table class="toplist">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Joueur</th>
+          <th>Équipe</th>
+          <th style="text-align:center;">Buts</th>
+          <th style="text-align:center;">Passes</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+      const chartLabels = [];
+      const chartData = [];
+
+      data.data.slice(0, 10).forEach((r, idx) => {
+        chartLabels.push(r.player_name);
+        chartData.push(r.total_goals);
+
+        html += `<tr>
+        <td><span class="badge-rank">${idx + 1}</span></td>
+        <td style="font-weight:600;">${r.player_name}</td>
+        <td style="color:#94A3B8; font-size:13px;">${r.team_name}</td>
+        <td style="text-align:center; font-weight:700; color:var(--accent); font-size:16px;">${r.total_goals}</td>
+        <td style="text-align:center; color:#94A3B8;">${r.total_assists}</td>
+      </tr>`;
+      });
+
+      html += "</tbody></table>";
+      container.innerHTML = html;
+
+      updateChart(chartLabels, chartData);
+    }
+
+    function updateChart(labels, values) {
+      const ctx = qs("scorersChart").getContext("2d");
+      if (scorersChart) scorersChart.destroy();
+
+      scorersChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Buts marqués',
+            data: values,
+            backgroundColor: 'rgba(255, 215, 0, 0.6)',
+            borderColor: '#FFD700',
+            borderWidth: 1,
+            borderRadius: 5
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(255,255,255,0.05)' },
+              ticks: { color: '#94A3B8' }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { color: '#94A3B8', font: { size: 10 } }
+            }
+          }
+        }
+      });
+    }
+
+    // Events
+    qs("stMatch").addEventListener("change", (e) => loadPlayersForMatch(e.target.value));
+    qs("btnSaveStats").addEventListener("click", saveStats);
+
+    // Init
+    window.onload = () => {
+      loadCategories();
+      loadTopScorers();
+    };
+  </script>
+</body>
+
+</html>

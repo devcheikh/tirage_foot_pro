@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Calendrier & Résultats – LPA</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #0A2342;
+      color: #F8FAFC;
+      display: flex;
+    }
+    .sidebar {
+      width: 260px;
+      background: #001B48;
+      height: 100vh;
+      position: fixed;
+      top: 0; left: 0;
+      padding: 25px;
+      border-right: 2px solid #FFD70040;
+    }
+    .sidebar h2 {
+      color: #FFD700; text-align:center;
+      font-size: 26px; margin-bottom: 40px;
+    }
+    .sidebar a {
+      display:block; padding:12px 16px;
+      margin-bottom:12px;
+      color:#F8FAFC; text-decoration:none;
+      border-radius:8px; font-size:16px;
+      transition:0.25s;
+    }
+    .sidebar a:hover { background:#FFD70033; }
+    .sidebar .logout{ background:#8A0303; font-weight:bold; margin-top:40px;}
+    .sidebar .logout:hover{ background:#FF4C4C;}
+
+    .content {
+      margin-left:260px;
+      padding:40px;
+      width:100%;
+    }
+    h1 {
+      color:#FFD700; font-size:34px;
+      margin-bottom:8px;
+    }
+    .subtitle { color:#C7D3E8; margin-bottom:25px;}
+
+    .card {
+      background:#001B48;
+      border-radius:12px;
+      border:1px solid #FFD70033;
+      padding:22px;
+      margin-bottom:25px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.3);
+    }
+    .card h2 { color:#FFD700; margin-bottom:12px; }
+
+    label {
+      font-weight:bold;
+      color:#FFD700;
+      display:block;
+      margin-top:10px;
+    }
+    select {
+      width:100%; padding:10px; margin-top:6px;
+      border-radius:8px; border:1px solid #FFD70055;
+      background:#0A2342; color:#F8FAFC;
+    }
+
+    .match-row {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:10px;
+      margin-bottom:10px;
+      background:#0A2342;
+      border-radius:10px;
+      border:1px solid #FFD70033;
+    }
+    .match-teams {
+      display:flex; align-items:center; gap:8px;
+    }
+    .match-logo {
+      width:32px; height:32px;
+      border-radius:50%; object-fit:cover;
+      border:2px solid #FFD700;
+    }
+    .score-inputs input {
+      width:45px; text-align:center;
+      padding:6px; border-radius:6px;
+      border:1px solid #FFD70055;
+      background:#001B48; color:#F8FAFC;
+    }
+    .btn-save-score {
+      padding:6px 10px;
+      background:#22c55e;
+      color:#001B48;
+      border:none; border-radius:8px;
+      font-size:13px; font-weight:bold;
+      cursor:pointer;
+    }
+    .btn-save-score:hover { background:#4ade80; }
+
+    table.standings {
+      width:100%;
+      border-collapse:collapse;
+      margin-top:10px;
+      font-size:14px;
+    }
+    table.standings th,
+    table.standings td {
+      border:1px solid #1f2937;
+      padding:6px 8px;
+      text-align:center;
+    }
+    table.standings th {
+      background:#001B48;
+      color:#FFD700;
+    }
+    table.standings td.team-name-cell {
+      text-align:left;
+      display:flex; align-items:center; gap:8px;
+    }
+    .std-logo {
+      width:22px; height:22px;
+      border-radius:50%; object-fit:cover;
+      border:1px solid #FFD700;
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <h2>⚽ LPA</h2>
+  <a href="dashboard.html">🎯 Tirage</a>
+  <a href="manage_matches.html">🏟 Programmer matchs</a>
+  <a href="matches_calendar.html">📅 Calendrier & Résultats</a>
+  <a href="manage_teams.html">🏳️ Équipes & Catégories</a>
+  <a href="manage_players.html">👥 Joueurs</a>
+  <a href="players_stats.html">📊 Stats joueurs</a>
+  <a href="../index.html">🌍 Page publique</a>
+  <a href="../../backend/auth/logout.php" class="logout">🚪 Déconnexion</a>
+</div>
+
+<div class="content">
+  <h1>Calendrier & Résultats</h1>
+  <p class="subtitle">Choisis une catégorie, un tirage et une poule pour gérer les scores et voir le classement.</p>
+
+  <div class="card">
+    <h2>🔍 Filtre</h2>
+    <label>Catégorie</label>
+    <select id="calCategory"></select>
+
+    <label>Tirage</label>
+    <select id="calDraw"></select>
+
+    <label>Poule</label>
+    <select id="calPoule"></select>
+  </div>
+
+  <div class="card">
+    <h2>📅 Matchs</h2>
+    <div id="calMatches"></div>
+  </div>
+
+  <div class="card">
+    <h2>🏆 Classement de la poule</h2>
+    <div id="calStandings"></div>
+  </div>
+</div>
+
+<script src="../assets/js/matches_calendar.js"></script>
+</body>
+</html>

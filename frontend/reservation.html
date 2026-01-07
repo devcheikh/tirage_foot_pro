@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réserver un Terrain - LPA</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+        :root {
+            --primary: #0A2342;
+            --accent: #FFD700;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background: #0A2342;
+            background: linear-gradient(-45deg, #0A2342, #1a365d, #001B48, #052c5c);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .animated-text {
+            background: linear-gradient(to right, #fff, var(--accent), #fff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 200% auto;
+            animation: shine 3s linear infinite;
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            opacity: 0.7;
+        }
+
+        .reservation-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 40px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            color: var(--accent);
+            margin-top: 0;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        textarea {
+            height: 100px;
+            resize: none;
+        }
+
+        .btn-submit {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 30px;
+            transition: 0.3s;
+        }
+
+        .btn-submit:hover {
+            transform: scale(1.02);
+            background: #fff;
+        }
+
+        .status {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* SLOT STYLES */
+        .grid-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .slot-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .slot-card.available:hover {
+            border-color: var(--accent);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .slot-card.selected {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .slot-card.taken {
+            opacity: 0.3;
+            cursor: not-allowed;
+            background: #000;
+        }
+
+        .slot-time {
+            font-weight: bold;
+            font-size: 16px;
+            display: block;
+        }
+
+        .slot-price {
+            font-size: 12px;
+            color: var(--accent);
+        }
+
+        .selected .slot-price {
+            color: var(--primary);
+        }
+
+        /* 💬 CHAT WIDGET */
+        .chat-bubble {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            transition: transform 0.3s;
+            animation: bubblePulse 2s infinite;
+        }
+
+        @keyframes bubblePulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4);
+                transform: scale(1);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(255, 215, 0, 0);
+                transform: scale(1.05);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+                transform: scale(1);
+            }
+        }
+
+        .chat-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 500px;
+            background: #001B48;
+            border: 1px solid var(--accent);
+            border-radius: 20px;
+            display: none;
+            flex-direction: column;
+            z-index: 2000;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-msg {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+
+        .chat-input-area {
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-send {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            border-radius: 8px;
+            padding: 0 15px;
+            cursor: pointer;
+        }
+
+        /* SUCCESS MODAL */
+        #successModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-card {
+            background: #001B48;
+            border: 2px solid var(--accent);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.2);
+        }
+
+        .success-icon {
+            font-size: 60px;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .btn-close-modal {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: 0.3s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Modal de Succès -->
+    <div id="successModal">
+        <div class="success-card animate__animated animate__zoomIn">
+            <div class="success-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <h2 style="color:var(--accent); margin-bottom:15px;">Demande Envoyée !</h2>
+            <p style="line-height:1.6; color:#C3D1EA;">
+                Merci <b id="displayCustName"></b>, votre demande de réservation est en cours.
+            </p>
+            <div
+                style="background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; margin-top:20px; text-align:left; font-size:14px;">
+                <p style="margin:5px 0;"><i class="fas fa-calendar-day" style="color:var(--accent); width:20px;"></i>
+                    <span id="displayDate"></span>
+                </p>
+                <p style="margin:5px 0;"><i class="fas fa-hourglass-start" style="color:var(--accent); width:20px;"></i>
+                    <span id="displayTime"></span>
+                </p>
+                <p style="margin:5px 0; color:var(--accent); font-weight:bold; margin-top:10px;">Statut : EN ATTENTE DE
+                    VÉRIFICATION</p>
+            </div>
+            <button class="btn-close-modal" onclick="closeSuccessModal()">J'ai compris</button>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Retour</a>
+
+    <!-- 💬 CHAT WIDGET -->
+    <div class="chat-bubble" id="chatBubble" onclick="toggleChat()">
+        <i class="fas fa-comments"></i>
+    </div>
+
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <h3 style="margin:0; color:var(--accent);">Chat Public ⚽</h3>
+            <i class="fas fa-times" onclick="toggleChat()" style="cursor:pointer;"></i>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-msg">Bienvenue sur le chat !</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chatNickname" placeholder="Pseudo" style="width:70px; margin:0;">
+            <input type="text" id="chatMsgInput" placeholder="Message..." style="margin:0;">
+            <button class="chat-send" onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <div class="container animate__animated animate__fadeIn">
+        <div class="reservation-card">
+            <h1 class="animated-text">Réserver votre créneau</h1>
+
+            <form id="resForm">
+                <div class="form-grid">
+                    <div class="full-width">
+                        <label>Choisir un terrain</label>
+                        <select id="stadiumSelect" required onchange="loadSlots()">
+                            <option value="">Chargement des terrains...</option>
+                        </select>
+                    </div>
+
+                    <div class="full-width">
+                        <label>Date souhaitée</label>
+                        <input type="date" id="resDate" required onchange="loadSlots()"
+                            min="${new Date().toISOString().split('T')[0]}">
+                    </div>
+
+                    <div class="full-width" id="slotsContainer" style="display:none;">
+                        <label>Créneaux disponibles</label>
+                        <div id="slotsGrid" class="grid-slots">
+                            <!-- Rempli par JS -->
+                        </div>
+                    </div>
+
+                    <div class="full-width">
+                        <label>Votre nom complet</label>
+                        <input type="text" id="custName" placeholder="Moussa Ndiaye" required>
+                    </div>
+
+                    <div class="full-width">
+                        <label>Numéro de téléphone</label>
+                        <input type="tel" id="custPhone" placeholder="77 123 45 67" required>
+                    </div>
+
+                    <div class="full-width">
+                        <label>Notes ou demandes spéciales</label>
+                        <textarea id="resNotes" placeholder="Match amical, tournoi corporatif..."></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="btnRes">Envoyer la demande</button>
+                <div id="resStatus" class="status"></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let selectedSlot = null;
+
+        document.getElementById("resDate").min = new Date().toISOString().split('T')[0];
+        document.getElementById("resDate").value = new Date().toISOString().split('T')[0];
+
+        async function loadStadiums() {
+            const res = await fetch("../backend/api/locations_list.php");
+            const data = await res.json();
+            const select = document.getElementById("stadiumSelect");
+            if (data.data && data.data.length > 0) {
+                select.innerHTML = '<option value="">-- Sélectionnez un terrain --</option>' +
+                    data.data.map(l => `<option value="${l.id}">${l.name}</option>`).join('');
+            } else {
+                select.innerHTML = '<option value="">Aucun terrain disponible actuellement</option>';
+            }
+        }
+
+        async function loadSlots() {
+            const sid = document.getElementById("stadiumSelect").value;
+            const date = document.getElementById("resDate").value;
+            const container = document.getElementById("slotsContainer");
+            const grid = document.getElementById("slotsGrid");
+
+            if (!sid || !date) {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'block';
+            grid.innerHTML = "Chargement des créneaux...";
+
+            const res = await fetch(`../backend/api/reservation_slots.php?stadium_id=${sid}&date=${date}`);
+            const data = await res.json();
+
+            if (!data.data || data.data.length === 0) {
+                grid.innerHTML = "<p style='grid-column:1/-1;'>Aucun créneau défini pour ce terrain.</p>";
+                return;
+            }
+
+            grid.innerHTML = data.data.map(s => `
+                <div class="slot-card ${s.is_available ? 'available' : 'taken'}" 
+                     onclick='selectSlot(${JSON.stringify(s)})'
+                     id="slot-${s.id}">
+                    <span class="slot-time">${s.start_time.substring(0, 5)} - ${s.end_time.substring(0, 5)}</span>
+                    <span class="slot-price">${s.price} FCFA</span>
+                </div>
+            `).join('');
+            selectedSlot = null;
+        }
+
+        function selectSlot(s) {
+            if (!s.is_available) return;
+
+            // UI Update
+            document.querySelectorAll(".slot-card").forEach(el => el.classList.remove("selected"));
+            document.getElementById("slot-" + s.id).classList.add("selected");
+
+            selectedSlot = s;
+        }
+
+        document.getElementById("resForm").onsubmit = async (e) => {
+            e.preventDefault();
+            const status = document.getElementById("resStatus");
+            const btn = document.getElementById("btnRes");
+
+            if (!selectedSlot) {
+                status.innerHTML = "<span style='color:#ef4444;'>Veuillez sélectionner un créneau disponible.</span>";
+                return;
+            }
+
+            btn.disabled = true;
+            status.innerHTML = "Envoi en cours...";
+
+            const body = {
+                stadium_id: document.getElementById("stadiumSelect").value,
+                reservation_date: document.getElementById("resDate").value,
+                start_time: selectedSlot.start_time,
+                end_time: selectedSlot.end_time,
+                customer_name: document.getElementById("custName").value,
+                customer_phone: document.getElementById("custPhone").value,
+                notes: document.getElementById("resNotes").value
+            };
+
+            try {
+                const res = await fetch("../backend/api/reservation_create.php", {
+                    method: "POST",
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                if (data.success) {
+                    // status.innerHTML = "<span style='color:#22c55e; font-weight:bold;'>" + data.message + "</span>";
+
+                    // Populate and show Modal
+                    document.getElementById("displayCustName").innerText = body.customer_name;
+                    document.getElementById("displayDate").innerText = body.reservation_date;
+                    document.getElementById("displayTime").innerText = body.start_time.substring(0, 5) + " - " + body.end_time.substring(0, 5);
+                    document.getElementById("successModal").style.display = 'flex';
+
+                    document.getElementById("resForm").reset();
+                    loadSlots();
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (err) {
+                status.innerHTML = "<span style='color:#ef4444;'>" + err.message + "</span>";
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function closeSuccessModal() {
+            document.getElementById("successModal").style.display = 'none';
+        }
+
+        async function checkCustomerNotifications() {
+            const phone = document.getElementById("custPhone").value;
+            if (!phone) return;
+
+            try {
+                const res = await fetch(`../backend/api/notifications_list.php?role=customer&phone=${phone}`);
+                const data = await res.json();
+                if (data.success && data.data.length > 0) {
+                    data.data.forEach(n => {
+                        alert("🔔 NOTIFICATION : " + n.message);
+                        // Marquer comme lue idéalement, mais ici on va juste arrêter de l'afficher si on a un système de "clear"
+                    });
+                    // On pourrait recharger les slots si le statut est changé
+                    loadSlots();
+                }
+            } catch (e) { }
+        }
+
+        setInterval(checkCustomerNotifications, 10000);
+
+        async function toggleChat() {
+            const win = document.getElementById("chatWindow");
+            win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
+            if (win.style.display === 'flex') loadChatMessages();
+        }
+
+        async function loadChatMessages() {
+            try {
+                const resp = await fetch('../backend/api/chat_messages.php');
+                const msgs = await resp.json();
+                const container = document.getElementById("chatMessages");
+                container.innerHTML = msgs.map(m => `
+                    <div class="chat-msg"><b>${m.nickname}:</b> ${m.message}</div>
+                `).join('');
+                container.scrollTop = container.scrollHeight;
+            } catch (err) { }
+        }
+
+        async function sendChatMessage() {
+            const nick = document.getElementById("chatNickname").value || "Anonyme";
+            const msg = document.getElementById("chatMsgInput").value;
+            if (!msg) return;
+            await fetch('../backend/api/chat_send.php', {
+                method: 'POST',
+                body: JSON.stringify({ nickname: nick, message: msg })
+            });
+            document.getElementById("chatMsgInput").value = "";
+            loadChatMessages();
+        }
+
+        setInterval(() => {
+            if (document.getElementById("chatWindow").style.display === 'flex') loadChatMessages();
+        }, 5000);
+
+        window.onload = loadStadiums;
+    </script>
+
+</body>
+
+</html>

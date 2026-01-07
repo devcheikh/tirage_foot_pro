@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Connexion Admin – Tirage Foot</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+
+<body class="dark">
+  <div class="app auth-app">
+    <div class="auth-card">
+      <h1>Tirage Foot – Admin</h1>
+      <p>Connecte-toi pour accéder au tableau de bord.</p>
+
+      <label for="username">Nom d'utilisateur</label>
+      <input type="text" id="username" placeholder="admin" />
+
+      <label for="password">Mot de passe</label>
+      <input type="password" id="password" placeholder="••••••••" />
+
+      <button id="btnLogin">Se connecter</button>
+
+      <div id="status" class="status"></div>
+    </div>
+  </div>
+
+  <script>
+    const btnLogin = document.getElementById('btnLogin');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const statusEl = document.getElementById('status');
+
+    function setStatus(msg, isError = false) {
+      statusEl.textContent = msg;
+      statusEl.style.color = isError ? 'red' : 'lime';
+    }
+
+    btnLogin.addEventListener('click', handleLogin);
+
+    [usernameInput, passwordInput].forEach(sub => {
+      sub.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleLogin();
+      });
+      sub.addEventListener('input', () => setStatus(''));
+    });
+
+    async function handleLogin() {
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!username || !password) {
+        return setStatus('Merci de remplir tous les champs.', true);
+      }
+
+      setStatus('Vérification...');
+
+      try {
+        const res = await fetch('../../backend/auth/login.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+        if (!data.success) {
+          return setStatus(data.message || 'Erreur de connexion.', true);
+        }
+
+        setStatus('Connexion réussie, redirection...', false);
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 700);
+
+      } catch (e) {
+        console.error(e);
+        setStatus('Erreur réseau.', true);
+      }
+    }
+  </script>
+</body>
+
+</html>

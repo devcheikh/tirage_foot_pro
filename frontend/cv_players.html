@@ -1,0 +1,2970 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Scouting - CV Joueurs - LPA</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --primary: #001B48;
+            --secondary: #000B1E;
+            --accent: #FFD700;
+            --accent-glow: rgba(255, 215, 0, 0.4);
+            --text: #F8FAFC;
+            --text-muted: #94A3B8;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top right, #001B48, #000B1E);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Background Animation */
+        .bg-shine {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 45%, rgba(255, 215, 0, 0.03) 50%, transparent 55%);
+            background-size: 200% 200%;
+            animation: shine 10s infinite linear;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes shine {
+            0% {
+                background-position: -200% -200%;
+            }
+
+            100% {
+                background-position: 200% 200%;
+            }
+        }
+
+        /* 💎 NAVBAR PREMIUM SPICY */
+        .public-navbar {
+            background: rgba(2, 6, 23, 0.7);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            padding: 10px 40px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 215, 0, 0.05);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .public-navbar:hover {
+            background: rgba(2, 6, 23, 0.85);
+            border-bottom-color: rgba(255, 215, 0, 0.4);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: all 0.4s;
+            position: relative;
+        }
+
+        .nav-brand:hover {
+            transform: scale(1.08) rotate(-2deg);
+        }
+
+        .nav-brand-text {
+            font-weight: 900;
+            font-size: 1.6rem;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, #FFF 0%, #FFD700 50%, #FFA500 100%);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            animation: navShimmer 4s linear infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+        }
+
+        @keyframes navShimmer {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            100% {
+                background-position: 200% 50%;
+            }
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .public-navbar a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+        }
+
+        .public-navbar a:hover {
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            transform: translateY(-3px);
+        }
+
+        .hamburger-menu {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        /* Responsive Navbar Updates */
+        @media (max-width: 768px) {
+            .public-navbar {
+                padding: 15px 20px;
+                /* flex-direction: column;  Keep row for brand + burger */
+                align-items: center;
+                justify-content: space-between;
+                position: relative;
+            }
+
+            .nav-brand {
+                margin-right: auto;
+            }
+
+            .hamburger-menu {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                /* Hidden by default on mobile */
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(2, 6, 23, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 20px;
+                gap: 20px;
+                border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .public-navbar a {
+                width: 100%;
+                justify-content: center;
+                font-size: 1.1rem;
+                padding: 10px;
+            }
+        }
+
+        .public-navbar a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(to right, transparent, var(--accent), transparent);
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 0 15px var(--accent);
+            border-radius: 99px;
+        }
+
+        .public-navbar a:hover::after {
+            width: 110%;
+        }
+
+        .public-navbar a i {
+            font-size: 1rem;
+            transition: transform 0.3s;
+        }
+
+        .public-navbar a:hover i {
+            transform: scale(1.3) rotate(10deg);
+        }
+
+        /* 📱 RESPONSIVE SCOUTING */
+        @media (max-width: 768px) {
+            .public-navbar {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                width: 100%;
+                justify-content: center;
+            }
+
+            header h1 {
+                font-size: 2.2rem;
+            }
+
+            .filters {
+                flex-direction: column;
+                padding: 15px;
+            }
+
+            .search-group,
+            .filter-group {
+                width: 100%;
+            }
+
+            .player-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 15px;
+                padding: 10px;
+            }
+
+            .modal-content {
+                width: 95% !important;
+                margin: 10px auto;
+                padding: 15px;
+            }
+
+            .player-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .player-stats-overview {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-link {
+                font-size: 11px;
+            }
+
+            .player-full-name {
+                font-size: 1.5rem;
+            }
+
+            .stat-box {
+                padding: 10px;
+            }
+        }
+
+        header {
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .animated-text {
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            background: linear-gradient(to right, #fff, #FFD700);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 100px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Filter Section */
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .filter-chip.active,
+        .filter-chip:hover {
+            background: var(--accent);
+            color: var(--primary);
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        /* Player Grid */
+        .player-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 100%;
+        }
+
+        .player-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .player-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 215, 0, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-img-wrapper {
+            width: 100%;
+            height: 320px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .player-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+
+        .player-card:hover .player-img {
+            transform: scale(1.1);
+        }
+
+        .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(transparent, var(--secondary));
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .card-info {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .player-name {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .player-meta {
+            color: var(--accent);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .player-stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-value {
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .btn-cv {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-cv:hover {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        /* ===== CARTES COMPLETES DES JOUEURS ===== */
+        .player-card-full {
+            background: var(--primary);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            position: relative;
+        }
+
+        .player-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 25px;
+            display: flex;
+            gap: 25px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .player-photo-section {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .player-main-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 15px;
+            object-fit: cover;
+            border: 3px solid var(--accent);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .player-basic-info {
+            flex: 1;
+        }
+
+        .player-full-name {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #fff;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .player-position-team {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .position-badge {
+            background: var(--accent);
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .team-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .team-logo-small {
+            width: 25px;
+            height: 25px;
+            object-fit: contain;
+        }
+
+        .player-number {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--accent);
+            margin-top: 5px;
+        }
+
+        .player-stats-overview {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .player-details-grid {
+            padding: 25px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .detail-section-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-grid {
+            display: grid;
+            gap: 10px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            /* Increased padding */
+            background: rgba(255, 255, 255, 0.05);
+            /* Added background */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            /* Rounded corners */
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .info-value {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .skills-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-chip {
+            background: var(--accent);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .bio-text {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .motto-quote {
+            background: rgba(255, 215, 0, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            margin: 0;
+            font-style: italic;
+            color: #fff;
+            font-size: 1.1rem;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .social-link.instagram {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white;
+        }
+
+        .social-link.twitter {
+            background: #1da1f2;
+            color: white;
+        }
+
+        .social-link.linkedin {
+            background: #0077b5;
+            color: white;
+        }
+
+        .social-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .license-info {
+            text-align: center;
+        }
+
+        .license-number {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        .license-status {
+            color: #22c55e;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .license-category {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .video-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .video-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .league-info-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            min-width: 150px;
+        }
+
+        .season-badge {
+            background: linear-gradient(135deg, var(--accent), #ff8c00);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .season-badge i {
+            font-size: 1rem;
+        }
+
+        .league-qr-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .league-logo-qr {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .league-logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .league-logo-qr i {
+            font-size: 1.8rem;
+            color: var(--accent);
+            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.4));
+        }
+
+        .league-qr-code {
+            width: 60px;
+            height: 60px;
+            background: #ffffff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            padding: 4px;
+            /* Added padding */
+        }
+
+        .league-qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .download-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .download-btn {
+            width: 35px;
+            height: 35px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .image-btn {
+            background: #22c55e;
+            color: white;
+        }
+
+        .image-btn:hover {
+            background: #16a34a;
+        }
+
+        .pdf-btn {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .pdf-btn:hover {
+            background: #e6b800;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .player-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .player-photo-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .player-full-name {
+                font-size: 1.5rem;
+            }
+
+            .player-details-grid {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+
+            .player-stats-overview {
+                justify-content: center;
+            }
+        }
+
+        /* Modal / Detail View */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--primary);
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            border-radius: 30px;
+            position: relative;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+        }
+
+        @media (max-width: 800px) {
+            .modal-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .modal-header {
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .modal-header img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid var(--accent);
+            object-fit: cover;
+            margin: 0 auto 20px auto;
+            display: block;
+        }
+
+        .modal-body {
+            padding: 40px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--accent);
+            z-index: 10;
+        }
+
+        .detail-section {
+            margin-bottom: 30px;
+        }
+
+        .detail-title {
+            color: var(--accent);
+            text-transform: uppercase;
+            font-weight: 800;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--accent);
+            padding-left: 10px;
+        }
+
+        .back-nav:hover {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .btn-apply-trigger {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--accent);
+            color: var(--primary);
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 800;
+            text-transform: uppercase;
+            box-shadow: 0 10px 30px var(--accent-glow);
+            text-decoration: none;
+            z-index: 100;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-apply-trigger:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px var(--accent-glow);
+        }
+
+        /* Application Form Modal */
+        #applyModal .modal-content {
+            grid-template-columns: 1fr;
+            max-width: 600px;
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--accent);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 10px;
+            color: #fff;
+            box-sizing: border-box;
+        }
+
+        .btn-submit-app {
+            width: 100%;
+            padding: 15px;
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .back-nav {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            color: #fff;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 50px;
+            backdrop-filter: blur(5px);
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-tag {
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--accent);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+        }
+
+        /* Digital License Styling - ENHANCED VERSION */
+        .license-card {
+            background: linear-gradient(135deg, #001B48 0%, #000B1E 50%, #001B48 100%);
+            border: 2px solid var(--accent);
+            border-radius: 15px;
+            padding: 15px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 25px;
+            box-shadow:
+                0 10px 25px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(255, 215, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: licenseGlow 3s ease-in-out infinite alternate;
+            transform: scale(1);
+            transition: transform 0.3s ease;
+            max-width: 100%;
+        }
+
+        .license-card:hover {
+            transform: scale(1.02);
+            box-shadow:
+                0 25px 50px rgba(0, 0, 0, 0.9),
+                0 0 80px rgba(255, 215, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes licenseGlow {
+            0% {
+                box-shadow:
+                    0 20px 40px rgba(0, 0, 0, 0.8),
+                    0 0 60px rgba(255, 215, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            }
+
+            100% {
+                box-shadow:
+                    0 20px 40px rgba(0, 0, 0, 0.8),
+                    0 0 80px rgba(255, 215, 0, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            }
+        }
+
+        .license-card::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(255, 215, 0, 0.08) 0%, transparent 50%);
+            animation: licenseShine 8s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes licenseShine {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .license-card::after {
+            content: "★ OFFICIEL ★";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #001B48;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 10px rgba(255, 215, 0, 0.5);
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .license-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.4);
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .license-logo {
+            font-weight: 900;
+            color: var(--accent);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .license-logo i {
+            font-size: 1.5rem;
+            color: var(--accent);
+            filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.4));
+        }
+
+        .license-body {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .license-qr {
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+            padding: 5px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #000;
+            box-shadow:
+                0 4px 12px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .license-qr::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+            animation: qrShine 3s infinite;
+        }
+
+        @keyframes qrShine {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        .license-info {
+            flex-grow: 1;
+        }
+
+        .license-label {
+            font-size: 0.75rem;
+            color: rgba(255, 215, 0, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .license-value {
+            font-weight: 900;
+            font-size: 1.1rem;
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+            margin-bottom: 10px;
+        }
+
+        .license-details {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .license-detail {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .license-detail .license-label {
+            font-size: 0.65rem;
+            margin-bottom: 3px;
+        }
+
+        .license-detail .license-value {
+            font-size: 1rem;
+            color: #FFD700;
+            font-weight: 700;
+        }
+
+        .license-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            border-top: 1px solid rgba(255, 215, 0, 0.4);
+            margin-top: 15px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 100%);
+            border-radius: 10px;
+        }
+
+        .license-cert-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .license-cert-qr {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+            padding: 4px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .license-cert-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .license-cert-icon {
+            font-size: 1.1rem;
+            color: var(--accent);
+            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.4));
+        }
+
+        .license-auth-text {
+            font-size: 0.8rem;
+            font-weight: 900;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 6px rgba(255, 215, 0, 0.4);
+        }
+
+        .license-series {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+
+        .license-issuer {
+            text-align: right;
+        }
+
+        .license-issuer-label {
+            font-size: 0.65rem;
+            color: rgba(255, 215, 0, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+
+        .license-issuer-name {
+            font-size: 1rem;
+            font-weight: 900;
+            color: var(--accent);
+            line-height: 1.1;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+        }
+
+        /* Federation Style License Card (White) */
+        .license-card {
+            display: flex;
+            flex-direction: column;
+            width: 856px;
+            height: 540px;
+            /* ~53.98mm scaled up */
+            background: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+            color: #000;
+            font-family: 'Arial', sans-serif;
+            /* Clean font */
+        }
+
+        /* Watermark */
+        .license-card::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 45%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: url('assets/img/logo_lpa.png') no-repeat center center;
+            background-size: contain;
+            opacity: 0.08;
+            z-index: 0;
+            filter: grayscale(100%);
+        }
+
+        /* Right Vertical Strip */
+        .license-right-strip {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 50px;
+            background: #fff;
+            /* White strip */
+            border-left: 2px solid #004d40;
+            /* Green accents like reference */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .license-vertical-text {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            white-space: nowrap;
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: #1a1a1a;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Main Content Layout */
+        .license-content-row {
+            display: flex;
+            flex: 1;
+            padding: 25px 70px 0 25px;
+            /* Right padding for strip */
+            gap: 30px;
+            z-index: 1;
+        }
+
+        /* Photo Section */
+        .license-photo-col {
+            width: 150px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .license-photo-frame-fed {
+            width: 150px;
+            height: 180px;
+            /* Portrait Ratio */
+            border: 3px solid #004d40;
+            /* Green Border */
+            padding: 2px;
+            background: #fff;
+        }
+
+        .license-photo-frame-fed img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .license-id-fed {
+            font-family: monospace;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-align: center;
+            transform: rotate(-90deg);
+            transform-origin: left bottom;
+            position: absolute;
+            left: 35px;
+            bottom: 120px;
+            width: 200px;
+        }
+
+        /* Using QR under photo explicitly */
+        .license-qr-fed {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Info Section */
+        .license-info-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 15px;
+            padding-top: 10px;
+        }
+
+        .license-role-label {
+            font-weight: bold;
+            font-size: 1rem;
+            text-transform: uppercase;
+            color: #333;
+        }
+
+        .license-club-name {
+            font-size: 1.4rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: #000;
+            line-height: 1.1;
+        }
+
+        .license-fed-name-block {
+            margin-top: 10px;
+        }
+
+        .license-fed-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #000;
+            line-height: 1;
+        }
+
+        .license-meta-grid {
+            margin-top: 15px;
+            font-size: 0.95rem;
+            color: #444;
+            display: grid;
+            gap: 5px;
+        }
+
+        /* Footer Strip */
+        .license-footer-strip {
+            height: 50px;
+            background: linear-gradient(90deg, #e0f2f1 60%, #004d40 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 70px 0 25px;
+            /* Adjust for right strip overlay */
+            border-top: 2px solid #004d40;
+            margin-top: auto;
+            /* Push to bottom */
+            z-index: 1;
+        }
+
+        .license-season-text {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #004d40;
+            text-transform: uppercase;
+        }
+
+        .license-footer-logo {
+            height: 60px;
+            /* Overlap slightly */
+            background: #fff;
+            border-radius: 50%;
+            padding: 2px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            position: absolute;
+            right: 60px;
+            /* Left of the strip */
+            bottom: 15px;
+        }
+
+        .capture-mode {
+            background: var(--primary) !important;
+            background-color: var(--primary) !important;
+        }
+
+        /* 📱 RESPONSIVE LICENSE CARD SCALING */
+        @media (max-width: 900px) {
+            .license-card-container {
+                overflow: hidden;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                padding: 10px 0;
+            }
+
+            .license-card {
+                transform-origin: top center;
+                margin-bottom: -40%;
+                /* Compensate for whitespace after scale */
+            }
+        }
+
+        @media (max-width: 880px) {
+            .license-card {
+                transform: scale(0.9);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .license-card {
+                transform: scale(0.8);
+                margin-bottom: -20%;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .license-card {
+                transform: scale(0.7);
+                margin-bottom: -30%;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .license-card {
+                transform: scale(0.6);
+                margin-bottom: -40%;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .license-card {
+                transform: scale(0.5);
+                margin-bottom: -50%;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .license-card {
+                transform: scale(0.42);
+                margin-bottom: -60%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-shine"></div>
+
+    <!-- 🌟 NAVBAR -->
+    <nav class="public-navbar">
+        <a href="index.html" class="nav-brand">
+            <span class="nav-brand-text">LPA</span>
+        </a>
+
+        <button class="hamburger-menu" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <div class="nav-links">
+            <a href="index.html#selection-section"><i class="fas fa-trophy icon-fa"></i> Championnat</a>
+            <a href="index.html#poules-section"><i class="fas fa-layer-group icon-fa"></i> Poules</a>
+            <a href="index.html#matches-section"><i class="fas fa-futbol icon-fa"></i> Matchs</a>
+            <a href="index.html#blog-section"><i class="fas fa-newspaper icon-fa"></i> Blog</a>
+            <a href="index.html#standings-section"><i class="fas fa-list-ol icon-fa"></i> Classements</a>
+            <a href="index.html#squads-section"><i class="fas fa-users icon-fa"></i> Effectifs</a>
+            <a href="boutique.html"><i class="fas fa-shopping-bag icon-fa"></i> Boutique</a>
+            <a href="reservation.html"><i class="fas fa-calendar-alt icon-fa"></i> Réservation</a>
+            <a href="cv_players.html" class="active" style="color:var(--accent);"><i class="fas fa-id-card icon-fa"></i>
+                Scouting</a>
+            <a href="quiz.html"><i class="fas fa-gamepad icon-fa"></i> Quiz</a>
+        </div>
+    </nav>
+
+
+
+    <header>
+        <h1 class="animated-text animate__animated animate__fadeInDown">LPA Scouting</h1>
+        <p class="subtitle animate__animated animate__fadeIn animate__delay-1s">
+            Découvrez nos talents, analysez leurs profils et trouvez les stars de demain.
+        </p>
+    </header>
+
+    <div class="container">
+        <div class="filters animate__animated animate__fadeInUp"
+            style="display: flex; justify-content: center; gap: 15px; margin-bottom: 50px; flex-wrap: wrap; background: rgba(0, 27, 72, 0.6); padding: 20px; border-radius: 20px; border: 1px solid rgba(255, 215, 0, 0.1); backdrop-filter: blur(10px);">
+            <div class="search-group" style="position: relative; flex: 1; min-width: 250px;">
+                <i class="fas fa-search"
+                    style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--accent);"></i>
+                <input type="text" id="searchName" placeholder="Rechercher par nom..." oninput="applyFilters()"
+                    style="width: 100%; padding: 12px 15px 12px 45px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 50px; color: #FFD700; outline: none; transition: 0.3s; font-size: 1rem;">
+            </div>
+
+            <div class="filter-group" style="position: relative; min-width: 200px;">
+                <i class="fas fa-filter"
+                    style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--accent);"></i>
+                <select id="filterPosition" onchange="applyFilters()"
+                    style="width: 100%; padding: 13px 15px 13px 45px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 50px; color: #FFD700; outline: none; appearance: none; cursor: pointer; font-size: 1rem;">
+                    <option value="all">Tous les postes</option>
+                    <option value="Attaquant">Attaquants</option>
+                    <option value="Milieu">Milieux</option>
+                    <option value="Défenseur">Défenseurs</option>
+                    <option value="Gardien">Gardiens</option>
+                </select>
+                <i class="fas fa-chevron-down"
+                    style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none;"></i>
+            </div>
+        </div>
+
+        <div id="playerGrid">
+
+            <!-- Rempli par JS -->
+        </div>
+    </div>
+
+    <div id="playerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header" id="modalHeader">
+                <!-- Player info will be injected here -->
+            </div>
+            <div class="modal-actions"
+                style="display:flex; justify-content:flex-end; gap:8px; padding:8px; background:rgba(0,0,0,0.1);">
+                <button onclick="downloadLicense()" title="Télécharger Licence"
+                    style="width:35px; height:35px; padding:0; background:#ff6b35; color:white; border:none; border-radius:50%; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                    <i class="fas fa-id-card"></i>
+                </button>
+                <button onclick="downloadPDF()" title="Télécharger PDF"
+                    style="width:35px; height:35px; padding:0; background:var(--accent); color:var(--primary); border:none; border-radius:50%; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                    <i class="fas fa-file-pdf"></i>
+                </button>
+                <button onclick="downloadImage()" title="Télécharger Image"
+                    style="width:35px; height:35px; padding:0; background:#22c55e; color:white; border:none; border-radius:50%; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                    <i class="fas fa-image"></i>
+                </button>
+                <button onclick="printCV()" title="Imprimer"
+                    style="width:35px; height:35px; padding:0; background:#3b82f6; color:white; border:none; border-radius:50%; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                    <i class="fas fa-print"></i>
+                </button>
+                <button onclick="closeModal('playerModal')" title="Fermer"
+                    style="width:35px; height:35px; padding:0; background:rgba(255,255,255,0.1); color:white; border:none; border-radius:50%; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Rempli par JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Modal -->
+    <div id="applyModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('applyModal')">&times;</span>
+            <h2 style="color:var(--accent); margin-bottom:10px;">PROPOSER MON CV</h2>
+            <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:25px;">
+                Remplissez ce formulaire pour soumettre votre profil à la validation du club.
+            </p>
+
+            <form id="cvForm" onsubmit="submitCVRequest(event)">
+                <div class="form-group">
+                    <label class="form-label">Nom Complet</label>
+                    <input type="text" id="app_name" class="form-input" required placeholder="Ex: Moussa Traoré">
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                    <div class="form-group">
+                        <label class="form-label">Téléphone</label>
+                        <input type="tel" id="app_phone" class="form-input" required placeholder="+223 ...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Poste</label>
+                        <select id="app_position" class="form-input" required>
+                            <option value="Attaquant">Attaquant</option>
+                            <option value="Milieu">Milieu</option>
+                            <option value="Défenseur">Défenseur</option>
+                            <option value="Gardien">Gardien</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Biographie / Qualités</label>
+                    <textarea id="app_bio" class="form-input" style="height:100px;"
+                        placeholder="Dites-nous en plus sur vous..."></textarea>
+                </div>
+                <button type="submit" class="btn-submit-app">ENVOYER MA CANDIDATURE</button>
+                <div id="appStatus" style="margin-top:15px; text-align:center; font-size:0.9rem;"></div>
+            </form>
+        </div>
+    </div>
+
+    <button class="btn-apply-trigger" onclick="openModal('applyModal')">
+        <i class="fas fa-plus-circle"></i> Devenir Visible
+    </button>
+
+    <script>
+        // Gestionnaire d'événements pour les boutons de téléchargement
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.download-btn')) {
+                const button = e.target.closest('.download-btn');
+                const playerId = parseInt(button.getAttribute('data-player-id'));
+                const action = button.getAttribute('data-action');
+
+                console.log('Bouton de téléchargement cliqué:', { playerId, action });
+
+                // Vérifier que les joueurs sont chargés
+                if (!allPlayers || allPlayers.length === 0) {
+                    alert('Les joueurs ne sont pas encore chargés. Veuillez patienter.');
+                    return;
+                }
+
+                // Vérifier que la carte du joueur est visible
+                const playerCard = document.querySelector(`[data-player-id="${playerId}"]`);
+                if (!playerCard) {
+                    alert('Carte du joueur non trouvée. Essayez de recharger la page.');
+                    return;
+                }
+
+                if (action === 'image') {
+                    downloadPlayerImage(playerId);
+                } else if (action === 'pdf') {
+                    downloadPlayerPDF(playerId);
+                }
+            }
+        });
+
+        // Vérifier que les bibliothèques sont chargées
+        window.addEventListener('load', function () {
+            console.log('Vérification des bibliothèques:');
+            console.log('html2canvas:', typeof window.html2canvas);
+            console.log('jsPDF:', typeof window.jspdf);
+            console.log('QRCode:', typeof window.QRCode);
+
+            // Vérifier que les fonctions de téléchargement sont définies
+            console.log('downloadPlayerImage:', typeof window.downloadPlayerImage);
+            console.log('downloadPlayerPDF:', typeof window.downloadPlayerPDF);
+
+            // Définir les fonctions globalement si nécessaire
+            if (typeof window.downloadPlayerImage === 'undefined') {
+                window.downloadPlayerImage = downloadPlayerImage;
+                console.log('Fonction downloadPlayerImage définie globalement');
+            }
+            if (typeof window.downloadPlayerPDF === 'undefined') {
+                window.downloadPlayerPDF = downloadPlayerPDF;
+                console.log('Fonction downloadPlayerPDF définie globalement');
+            }
+
+            // Tester l'API au chargement
+            console.log('Test de l\'API players_cv_list.php...');
+            fetch('../backend/api/players_cv_list.php')
+                .then(res => {
+                    console.log('API accessible, status:', res.status);
+                    return res.text();
+                })
+                .then(text => {
+                    console.log('Réponse API (aperçu):', text.substring(0, 100));
+                    if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+                        console.error('L\'API retourne du HTML au lieu de JSON - Vérifiez que XAMPP est démarré');
+                    }
+                })
+                .catch(err => {
+                    console.error('API non accessible:', err);
+                });
+        });
+
+        let allPlayers = [];
+
+        async function loadScoutPlayers() {
+            console.log('=== DÉBUT loadScoutPlayers ===');
+            try {
+                console.log('Tentative de fetch vers ../backend/api/players_cv_list.php');
+                const res = await fetch('../backend/api/players_cv_list.php');
+                console.log('Réponse reçue:', res.status, res.statusText);
+                if (!res.ok) {
+                    throw new Error(`Erreur HTTP: ${res.status} ${res.statusText}`);
+                }
+
+                const text = await res.text();
+                console.log('Réponse brute du serveur:', text);
+
+                // Vérifier si la réponse contient du HTML (erreur serveur)
+                if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+                    console.error('Réponse HTML reçue au lieu de JSON:', text.substring(0, 500));
+                    throw new Error('Erreur serveur: réponse HTML reçue au lieu de JSON');
+                }
+
+                if (!text.trim()) {
+                    throw new Error('Réponse vide du serveur');
+                }
+
+                let data;
+                try {
+                    data = JSON.parse(text);
+                    console.log('JSON parsé avec succès:', data);
+                } catch (jsonError) {
+                    console.error('Erreur de parsing JSON:', jsonError);
+                    console.error('Texte reçu:', text);
+                    throw new Error(`JSON invalide: ${jsonError.message}`);
+                }
+
+                console.log('Data.success:', data.success);
+                console.log('Data.data:', data.data);
+
+                if (data.success) {
+                    allPlayers = data.data || [];
+                    console.log('Nombre de joueurs chargés:', allPlayers.length);
+
+                    // Vérifier que le grid existe
+                    const grid = document.getElementById("playerGrid");
+                    console.log('Grid trouvé:', !!grid);
+
+                    renderPlayers(allPlayers);
+                    setTimeout(() => generateLeagueQRCodes(allPlayers), 500);
+
+                    // Activer les boutons de téléchargement
+                    setTimeout(() => {
+                        document.querySelectorAll('.download-btn').forEach(btn => {
+                            btn.style.opacity = '1';
+                            btn.style.pointerEvents = 'auto';
+                        });
+                        console.log('Boutons de téléchargement activés');
+                    }, 1000);
+                } else {
+                    console.error('Réponse API en erreur:', data);
+                    throw new Error('Erreur API: ' + (data.message || 'Erreur inconnue'));
+                }
+            } catch (e) {
+                console.error("Erreur chargement scouting:", e);
+                const container = document.getElementById('playersContainer');
+                if (container) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 50px; color: var(--text-muted);">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
+                            <h3>Erreur de chargement</h3>
+                            <p>Impossible de charger la liste des joueurs.</p>
+                            <p style="font-size: 0.9em; color: #ff6b6b;">${e.message}</p>
+                            <p style="font-size: 0.9rem; margin-top: 20px;">
+                                Vérifiez que XAMPP est démarré et que Apache/MySQL fonctionnent.<br>
+                                Ouvrez le panneau de contrôle XAMPP et cliquez sur "Start" pour Apache et MySQL.
+                            </p>
+                            <button onclick="loadScoutPlayers()" style="margin-top: 20px; padding: 10px 20px; background: var(--accent); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                Réessayer
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function renderPlayers(players) {
+            console.log('=== DÉBUT renderPlayers ===');
+            const grid = document.getElementById("playerGrid");
+            grid.innerHTML = "";
+
+            if (players.length === 0) {
+                grid.innerHTML = `
+                    <div style="text-align:center; padding: 50px; color:var(--text-muted);">
+                        <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 20px;"></i>
+                        <h3>Aucun joueur trouvé</h3>
+                    </div>
+                `;
+                return;
+            }
+
+            // Group players by Team
+            const teams = {};
+            players.forEach(p => {
+                const teamName = p.team_name || 'Sans Équipe';
+                if (!teams[teamName]) {
+                    teams[teamName] = {
+                        name: teamName,
+                        logo: p.team_logo || null,
+                        players: []
+                    };
+                }
+                teams[teamName].players.push(p);
+            });
+
+            // Iterate through teams and render sections
+            Object.values(teams).forEach(team => {
+                const section = document.createElement('div');
+                section.className = 'team-section animate__animated animate__fadeInUp';
+                section.style.marginBottom = '50px';
+
+                // Team Header
+                const header = document.createElement('div');
+                header.style.cssText = 'display:flex; align-items:center; gap:15px; margin-bottom:25px; border-bottom:1px solid rgba(255,215,0,0.2); padding-bottom:10px;';
+
+                let logoHtml = '';
+                if (team.logo) {
+                    logoHtml = `<img src="${team.logo}" style="width:40px; height:40px; object-fit:contain;">`;
+                } else {
+                    logoHtml = `<i class="fas fa-shield-alt" style="font-size:1.5rem; color:var(--accent);"></i>`;
+                }
+
+                header.innerHTML = `
+                    ${logoHtml}
+                    <h2 style="margin:0; font-size:1.5rem; text-transform:uppercase; color:#fff;">${team.name}</h2>
+                    <span style="background:rgba(255,255,255,0.1); padding:2px 10px; border-radius:10px; font-size:0.8rem; color:var(--text-muted);">${team.players.length} Joueurs</span>
+                `;
+                section.appendChild(header);
+
+                // Grid for this team
+                const teamGrid = document.createElement('div');
+                teamGrid.className = 'player-grid'; // Use existing grid class
+                // Ensure grid style is applied if it wasn't global (it was global .player-grid)
+
+                team.players.forEach((p, idx) => {
+                    const card = document.createElement("div");
+                    card.className = "player-card";
+                    card.setAttribute('data-player-id', p.id);
+                    card.onclick = () => openCV(p.id);
+                    card.style.cursor = 'pointer';
+
+                    const photo = p.photo_url || 'assets/img/default-player.png';
+                    const age = p.birthdate ? calculateAge(p.birthdate) : null;
+
+                    card.innerHTML = `
+                        <div class="card-img-wrapper">
+                            <img src="${photo}" class="player-img" alt="${p.name}">
+                            <div class="card-overlay">
+                                <h3 class="player-name">${p.name}</h3>
+                                <div class="player-meta">${p.position}</div>
+                            </div>
+                        </div>
+                        <div class="card-info">
+                            <div class="player-stats">
+                                <div class="stat-item">
+                                    <span class="stat-value">${p.matches_played || 0}</span>
+                                    <span class="stat-label">Matchs</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value">${p.goals || 0}</span>
+                                    <span class="stat-label">Buts</span>
+                                </div>
+                                 ${age ? `
+                                <div class="stat-item">
+                                    <span class="stat-value">${age}</span>
+                                    <span class="stat-label">Ans</span>
+                                </div>
+                                ` : ''}
+                            </div>
+                            <button class="btn-cv">VOIR LE CV COMPLET</button>
+                        </div>
+                    `;
+                    teamGrid.appendChild(card);
+                });
+
+                section.appendChild(teamGrid);
+                grid.appendChild(section);
+            });
+        }
+
+        function toggleMenu() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        }
+
+        // Filter Logic
+        function applyFilters() {
+            const search = document.getElementById('searchName').value.toLowerCase();
+            const position = document.getElementById('filterPosition').value;
+
+            const filtered = allPlayers.filter(p => {
+                const nameMatch = p.name.toLowerCase().includes(search);
+                const posMatch = position === 'all' || (p.position || '').includes(position);
+                return nameMatch && posMatch;
+            });
+
+            renderPlayers(filtered);
+            // Re-generate QR codes for the filtered list after a short delay
+            setTimeout(() => generateLeagueQRCodes(filtered), 500);
+        }
+
+        function generateLeagueQRCodes(players) {
+            players.forEach((p, index) => {
+                setTimeout(() => {
+                    const qrContainer = document.getElementById(`league-qr-${p.id}`);
+                    if (qrContainer && !qrContainer.hasChildNodes()) {
+                        try {
+                            // Générer un QR code avec les informations de la ligue et du joueur
+                            const qrData = `LIGUE: ${p.category_name || 'LPA LEAGUE'}\nJOUEUR: ${p.name}\nEQUIPE: ${p.team_name}\nPOSTE: ${p.position}\nNUMERO: ${p.number || 'N/A'}\nSAISON: ${p.season || '2025-2026'}`;
+
+                            // Vider le conteneur avant de générer
+                            qrContainer.innerHTML = '';
+
+                            new QRCode(qrContainer, {
+                                text: qrData,
+                                width: 50,
+                                height: 50,
+                                colorDark: "#000000",
+                                colorLight: "#ffffff",
+                                correctLevel: QRCode.CorrectLevel.M
+                            });
+
+                            // Activer les boutons de téléchargement après génération du QR
+                            const card = document.querySelector(`[data-player-id="${p.id}"]`);
+                            if (card) {
+                                const downloadButtons = card.querySelectorAll('.download-btn');
+                                downloadButtons.forEach(btn => {
+                                    btn.style.opacity = '1';
+                                    btn.style.pointerEvents = 'auto';
+                                });
+                            }
+                        } catch (error) {
+                            console.error(`Erreur génération QR code pour ${p.name}:`, error);
+                            qrContainer.innerHTML = '<i class="fas fa-qrcode" style="font-size: 1.5rem; color: var(--text-muted);"></i>';
+                        }
+                    }
+                }, index * 100); // Délai progressif pour éviter les conflits
+            });
+        }
+
+        async function downloadPlayerImage(playerId) {
+            console.log('Fonction downloadPlayerImage appelée avec ID:', playerId);
+
+            if (!allPlayers || allPlayers.length === 0) {
+                alert('Les joueurs ne sont pas encore chargés.');
+                return;
+            }
+
+            const player = allPlayers.find(p => p.id === playerId);
+            if (!player) return;
+
+            const playerCard = document.querySelector(`[data-player-id="${playerId}"]`);
+            if (!playerCard) return;
+
+            // Scroll pour s'assurer que c'est visible
+            playerCard.scrollIntoView({ behavior: 'instant', block: 'center' });
+            await new Promise(r => setTimeout(r, 500)); // Attendre le scroll et le chargement
+
+            // Masquer les boutons pendant la capture
+            const btns = playerCard.querySelectorAll('.download-btn, .close-details-btn');
+            btns.forEach(b => b.style.display = 'none');
+
+            // Masquer le bouton de fermeture modal si présent
+            const modalClose = document.querySelector('.close-modal');
+            if (modalClose) modalClose.style.display = 'none';
+
+            // Indicateur visuel
+            const originalOp = playerCard.style.opacity;
+            playerCard.style.opacity = '1';
+
+            try {
+                const canvas = await html2canvas(playerCard, {
+                    scale: 2,
+                    backgroundColor: '#001B48',
+                    logging: true,
+                    useCORS: true,
+                    allowTaint: true,
+                    scrollX: 0,
+                    scrollY: 0,
+                    windowWidth: document.documentElement.scrollWidth,
+                    windowHeight: document.documentElement.scrollHeight
+                });
+
+                if (canvas.width > 0) {
+                    const link = document.createElement('a');
+                    link.download = `CV_${player.name.replace(/\s+/g, '_')}_LPA.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } else {
+                    throw new Error("Canvas vide");
+                }
+
+            } catch (err) {
+                console.error(err);
+                alert("Erreur capture: " + err.message);
+            } finally {
+                // Restaurer
+                btns.forEach(b => b.style.display = '');
+                if (modalClose) modalClose.style.display = '';
+                playerCard.style.opacity = originalOp;
+            }
+        }
+
+        async function downloadPlayerPDF(playerId) {
+            console.log('Fonction downloadPlayerPDF appelée avec ID:', playerId);
+
+            if (!allPlayers || allPlayers.length === 0) {
+                console.error('Aucun joueur chargé');
+                alert('Les joueurs ne sont pas encore chargés. Veuillez patienter.');
+                return;
+            }
+
+            const player = allPlayers.find(p => p.id === playerId);
+            if (!player) {
+                console.error('Joueur non trouvé:', playerId);
+                alert('Joueur non trouvé');
+                return;
+            }
+
+            console.log('Téléchargement PDF pour:', player.name);
+
+            // Trouver la carte du joueur
+            const playerCard = document.querySelector(`[data-player-id="${playerId}"]`);
+            let originalContent = null;
+            try {
+
+                if (!playerCard) {
+                    console.error('Carte joueur non trouvée pour ID:', playerId);
+                    alert('Carte joueur non trouvée');
+                    return;
+                }
+
+                console.log('Carte trouvée:', playerCard);
+                console.log('Dimensions de la carte:', {
+                    offsetWidth: playerCard.offsetWidth,
+                    offsetHeight: playerCard.offsetHeight,
+                    clientWidth: playerCard.clientWidth,
+                    clientHeight: playerCard.clientHeight,
+                    scrollWidth: playerCard.scrollWidth,
+                    scrollHeight: playerCard.scrollHeight
+                });
+
+                // Vérifier si la carte est visible
+                const rect = playerCard.getBoundingClientRect();
+                console.log('Position de la carte:', rect);
+                console.log('Carte visible:', rect.width > 0 && rect.height > 0);
+
+                if (playerCard.offsetWidth === 0 || playerCard.offsetHeight === 0) {
+                    throw new Error('La carte du joueur n\'a pas de dimensions valides pour le PDF');
+                }
+
+                // S'assurer que la carte est visible dans le viewport
+                playerCard.scrollIntoView({ behavior: 'instant', block: 'center' });
+                await new Promise(resolve => setTimeout(resolve, 200));
+
+                // Forcer le fond avant la capture
+                playerCard.style.backgroundColor = '#001B48';
+                playerCard.style.background = '#001B48';
+                playerCard.classList.add('capture-mode');
+
+                // S'assurer que tous les éléments enfants ont un fond
+                const allElements = playerCard.querySelectorAll('*');
+                allElements.forEach(el => {
+                    if (!el.style.backgroundColor || el.style.backgroundColor === 'transparent' || el.style.backgroundColor === '') {
+                        el.style.backgroundColor = '#001B48';
+                    }
+                });
+
+                // Petite pause pour laisser le DOM se mettre à jour
+                await new Promise(resolve => setTimeout(resolve, 100));
+
+                // Calculer les dimensions réelles de la carte
+                const cardRect = playerCard.getBoundingClientRect();
+                const cardWidth = Math.max(cardRect.width, playerCard.clientWidth, playerCard.offsetWidth);
+                const cardHeight = Math.max(cardRect.height, playerCard.clientHeight, playerCard.offsetHeight);
+
+                console.log('Dimensions calculées:', { width: cardWidth, height: cardHeight });
+
+                if (cardWidth === 0 || cardHeight === 0) {
+                    throw new Error(`Dimensions invalides pour le PDF: ${cardWidth}x${cardHeight}`);
+                }
+
+                // Cloner la carte AVANT d'ajouter l'indicateur de chargement
+                const clonedCard = playerCard.cloneNode(true);
+                clonedCard.style.position = 'absolute';
+                clonedCard.style.left = '0';
+                clonedCard.style.top = '0';
+                clonedCard.style.width = cardWidth + 'px';
+                clonedCard.style.height = cardHeight + 'px';
+                clonedCard.style.opacity = '1';
+                clonedCard.style.zIndex = '-9999';
+                clonedCard.style.display = 'block';
+                clonedCard.style.visibility = 'visible';
+                document.body.appendChild(clonedCard);
+                clonedCard.style.backgroundColor = '#001B48';
+                clonedCard.style.background = '#001B48';
+
+                // Attendre que le clone soit rendu
+                await new Promise(resolve => setTimeout(resolve, 100));
+
+                // Convertir les images du clone
+                await convertImagesToBase64(clonedCard);
+
+                // Afficher un indicateur de chargement sur la carte originale
+                originalContent = playerCard.innerHTML;
+                playerCard.style.opacity = '0.7';
+                playerCard.innerHTML += '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:#000; color:#fff; padding:10px; border-radius:5px; z-index:1000;">Génération du PDF...</div>';
+
+                let canvas = await html2canvas(clonedCard, {
+                    scale: 2,
+                    backgroundColor: '#001B48', // Forcer le fond bleu
+                    logging: true,
+                    useCORS: true,
+                    allowTaint: true,
+                    imageTimeout: 5000,
+                    width: cardWidth,
+                    height: cardHeight,
+                    scrollX: 0,
+                    scrollY: 0,
+                    removeContainer: true,
+                    foreignObjectRendering: true
+                });
+
+                // Supprimer le clone
+                document.body.removeChild(clonedCard);
+
+                console.log('Canvas généré:', canvas);
+                console.log('Dimensions canvas:', canvas.width, 'x', canvas.height);
+                console.log('Canvas vide?', canvas.width === 0 || canvas.height === 0);
+
+                if (canvas.width === 0 || canvas.height === 0) {
+                    throw new Error('Canvas généré est vide');
+                }
+
+                // Vérifier que le canvas contient du contenu
+                const ctx = canvas.getContext('2d');
+                const imageData = ctx.getImageData(0, 0, Math.min(canvas.width, 100), Math.min(canvas.height, 100));
+                const data = imageData.data;
+                let hasContent = false;
+                for (let i = 0; i < data.length; i += 4) {
+                    if (data[i + 3] > 10) { // Vérifier l'alpha channel avec une tolérance
+                        hasContent = true;
+                        break;
+                    }
+                }
+
+                if (!hasContent) {
+                    console.warn('Canvas semble vide, tentative avec background forcé...');
+                    // Recréer le clone avec background forcé
+                    const retryClonedCard = playerCard.cloneNode(true);
+                    retryClonedCard.style.position = 'absolute';
+                    retryClonedCard.style.left = '-9999px';
+                    retryClonedCard.style.top = '0';
+                    retryClonedCard.style.width = cardWidth + 'px';
+                    retryClonedCard.style.height = cardHeight + 'px';
+                    retryClonedCard.style.opacity = '1';
+                    retryClonedCard.style.backgroundColor = 'var(--primary)';
+                    document.body.appendChild(retryClonedCard);
+
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    await convertImagesToBase64(retryClonedCard);
+
+                    const retryCanvas = await html2canvas(retryClonedCard, {
+                        scale: 2,
+                        backgroundColor: '#001B48',
+                        logging: true,
+                        useCORS: true,
+                        allowTaint: true,
+                        imageTimeout: 5000,
+                        width: cardWidth,
+                        height: cardHeight,
+                        scrollX: 0,
+                        scrollY: 0,
+                        removeContainer: true
+                    });
+
+                    document.body.removeChild(retryClonedCard);
+
+                    if (retryCanvas.width > 0 && retryCanvas.height > 0) {
+                        console.log('Retry réussi, utilisation du nouveau canvas');
+                        canvas = retryCanvas;
+                    }
+                }
+
+                console.log('Canvas généré, création du PDF...');
+
+                if (!window.jspdf) {
+                    throw new Error('Bibliothèque jsPDF non chargée');
+                }
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                const pageWidth = 210;
+                const pageHeight = 297;
+                const imgWidth = pageWidth - 20; // Marges de 10mm
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                // Centrer l'image
+                const x = (pageWidth - imgWidth) / 2;
+                const y = 10;
+
+                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', x, y, imgWidth, imgHeight);
+
+                pdf.save(`CV_${player.name.replace(/\s+/g, '_')}_LPA.pdf`);
+
+                console.log('PDF téléchargé avec succès');
+
+            } catch (error) {
+                console.error('Erreur génération PDF:', error);
+                alert('Erreur lors du téléchargement du PDF: ' + error.message);
+            } finally {
+                // Restaurer le contenu original
+                if (originalContent) playerCard.innerHTML = originalContent;
+                playerCard.style.opacity = '1';
+                playerCard.classList.remove('capture-mode');
+            }
+        }
+
+        async function convertImagesToBase64(element) {
+            const images = element.querySelectorAll('img');
+            console.log(`Conversion de ${images.length} images en base64...`);
+
+            if (images.length === 0) {
+                console.log('Aucune image à convertir');
+                return;
+            }
+
+            const promises = Array.from(images).map((img, index) => {
+                return new Promise((resolve, reject) => {
+                    console.log(`Traitement image ${index + 1}/${images.length}:`, img.src);
+
+                    if (img.complete && img.naturalHeight !== 0) {
+                        console.log(`Image ${index + 1} déjà chargée`);
+                        resolve();
+                        return;
+                    }
+
+                    // Timeout de 5 secondes par image
+                    const timeout = setTimeout(() => {
+                        console.warn(`Timeout pour image ${index + 1}`);
+                        resolve(); // Résoudre quand même pour ne pas bloquer
+                    }, 5000);
+
+                    img.onload = () => {
+                        clearTimeout(timeout);
+                        console.log(`Image ${index + 1} chargée avec succès`);
+                        resolve();
+                    };
+
+                    img.onerror = () => {
+                        clearTimeout(timeout);
+                        console.warn(`Erreur chargement image ${index + 1}, utilisation de l'image par défaut`);
+                        // Remplacer par une image par défaut si elle échoue
+                        img.src = 'assets/img/default-player.png';
+                        resolve();
+                    };
+                });
+            });
+
+            await Promise.all(promises);
+            console.log('Toutes les images traitées');
+
+            // Vérifier que toutes les images ont des dimensions
+            const invalidImages = Array.from(images).filter(img => img.naturalWidth === 0 || img.naturalHeight === 0);
+            if (invalidImages.length > 0) {
+                console.warn(`${invalidImages.length} images ont des dimensions invalides`);
+            }
+        }
+
+        function calculateAge(birthdate) {
+            if (!birthdate) return null;
+            const today = new Date();
+            const birth = new Date(birthdate);
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+            return age;
+        }
+
+        function openCV(id) {
+            const p = allPlayers.find(item => item.id === id);
+            if (!p) return;
+
+            const modal = document.getElementById("playerModal");
+            const mHeader = document.getElementById("modalHeader");
+            const mBody = document.getElementById("modalBody");
+
+            // Clear header
+            mHeader.innerHTML = '';
+            mHeader.style.padding = '0';
+
+            const photo = p.photo_url || 'assets/img/default-player.png';
+            const season = '2025-2026'; // Forced season
+
+            mBody.innerHTML = `
+                <div class="license-card-container" style="display:flex; justify-content:center; padding:10px;">
+                    <div class="license-card animate__animated animate__fadeIn" data-player-id="${p.id}" 
+                         style="width: 856px; aspect-ratio: 85.60/53.98; max-width: 100%; box-sizing: border-box;">
+                        
+                        <!-- Top Center Logo (League) -->
+                        ${p.league_logo ? `
+                        <div style="position: absolute; top: 15px; left: 50%; transform: translateX(-50%); z-index: 10;">
+                            <img src="${p.league_logo}" style="height: 90px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));" alt="League Logo">
+                        </div>` : ''}
+
+                        <!-- Right Strip -->
+                        <div class="license-right-strip">
+                            <span class="license-vertical-text">LIGUE PRO DES ACADÉMIES</span>
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="license-content-row">
+                            <!-- Photo Section -->
+                            <div class="license-photo-col">
+                                <div class="license-photo-frame-fed">
+                                    <img src="${photo}" alt="Player">
+                                </div>
+                                <div class="license-qr-fed" id="license-qr-${p.id}"></div>
+                            </div>
+                            
+                            <!-- Info Section -->
+                            <div class="license-info-col">
+                                <div>
+                                    <div class="license-role-label">Joueur</div>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        ${p.team_logo ? `<img src="${p.team_logo}" style="height: 40px; width: auto; object-fit: contain;" alt="Logo">` : ''}
+                                        <div class="license-club-name">${p.team_name}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="license-fed-name-block">
+                                    <div class="license-fed-name">${p.name}</div>
+                                </div>
+
+                                <div class="license-meta-grid">
+                                    <div style="font-weight:bold;">${p.position}</div>
+                                    <div>Né le: <strong>${p.birthdate || 'N/A'}</strong></div>
+                                    <div>Nationalité: <strong>Sénégal</strong></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="license-footer-strip">
+                            <div class="license-season-text">${season} - OFFICIEL</div>
+                             ${p.league_logo ? `<img src="${p.league_logo}" class="license-footer-logo">` : ''}
+                        </div>
+                        
+                        <!-- ID absolutely positioned like barcode in reference -->
+                         <div style="position:absolute; left:-35px; top:50%; transform:rotate(-90deg); font-family:monospace; font-size:1rem; letter-spacing:2px; color:#555;">
+                            ${p.license_number || p.id}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            modal.style.display = "flex";
+            document.body.style.overflow = "hidden";
+
+            // Generate QR Code
+            setTimeout(() => {
+                const qrContainer = document.getElementById(`license-qr-${p.id}`);
+                if (qrContainer) {
+                    qrContainer.innerHTML = '';
+                    try {
+                        const qrData = `LICENCE:${p.license_number || p.id}|${p.name}|${p.team_name}|${season}`;
+                        new QRCode(qrContainer, {
+                            text: qrData,
+                            width: 80,
+                            height: 80,
+                            colorDark: "#1a1a1a",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.M
+                        });
+                    } catch (e) { console.error("QR Code Error:", e); }
+                }
+            }, 300);
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "flex";
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId || 'playerModal').style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+
+        async function submitCVRequest(e) {
+            e.preventDefault();
+            const status = document.getElementById("appStatus");
+            const btn = e.target.querySelector('button');
+
+            const payload = {
+                name: document.getElementById("app_name").value,
+                phone: document.getElementById("app_phone").value,
+                position: document.getElementById("app_position").value,
+                bio: document.getElementById("app_bio").value
+            };
+
+            btn.disabled = true;
+            btn.textContent = "ENVOI EN COURS...";
+            status.textContent = "";
+
+            try {
+                const res = await fetch('../backend/api/cv_apply.php', {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (!res.ok) {
+                    throw new Error(`Erreur HTTP: ${res.status} ${res.statusText}`);
+                }
+
+                const text = await res.text();
+                console.log('Réponse brute du serveur (cv_apply):', text);
+
+                // Vérifier si la réponse contient du HTML (erreur serveur)
+                if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+                    console.error('Réponse HTML reçue au lieu de JSON (cv_apply):', text.substring(0, 500));
+                    throw new Error('Erreur serveur: réponse HTML reçue au lieu de JSON');
+                }
+
+                if (!text.trim()) {
+                    throw new Error('Réponse vide du serveur');
+                }
+
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (jsonError) {
+                    console.error('Erreur de parsing JSON (cv_apply):', jsonError);
+                    console.error('Texte reçu:', text);
+                    throw new Error(`JSON invalide: ${jsonError.message}`);
+                }
+
+                if (data.success) {
+                    status.style.color = "lime";
+                    status.textContent = "Candidature envoyée ! Le club vous contactera.";
+                    e.target.reset();
+                    setTimeout(() => closeModal('applyModal'), 3000);
+                } else {
+                    status.style.color = "red";
+                    status.textContent = "Erreur: " + data.message;
+                }
+            } catch (err) {
+                console.error("Erreur envoi candidature:", err);
+                status.style.color = "red";
+                status.textContent = "Erreur: " + (err.message || "Erreur de connexion au serveur.");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "ENVOYER MA CANDIDATURE";
+            }
+        }
+
+        window.onclick = function (event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = "none";
+                document.body.style.overflow = "auto";
+            }
+        }
+
+        // Helper function to convert images to base64
+        async function convertImagesToBase64(element) {
+            const images = element.querySelectorAll('img');
+            const promises = Array.from(images).map(img => {
+                return new Promise((resolve) => {
+                    if (img.src && !img.src.startsWith('data:')) {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        canvas.width = img.naturalWidth || img.width;
+                        canvas.height = img.naturalHeight || img.height;
+
+                        const tempImg = new Image();
+                        tempImg.crossOrigin = 'anonymous';
+                        tempImg.onload = () => {
+                            ctx.drawImage(tempImg, 0, 0);
+                            try {
+                                img.src = canvas.toDataURL('image/png');
+                            } catch (e) {
+                                console.warn('Could not convert image:', e);
+                            }
+                            resolve();
+                        };
+                        tempImg.onerror = () => resolve();
+                        tempImg.src = img.src;
+                    } else {
+                        resolve();
+                    }
+                });
+            });
+            await Promise.all(promises);
+        }
+
+        // Download and Print Functions
+        // Download and Print Functions
+        async function downloadPDF() {
+            const modalContent = document.querySelector('.modal-content');
+            const actions = document.querySelector('.modal-actions');
+            const { jsPDF } = window.jspdf;
+
+            try {
+                // Remove animations for clean capture
+                const animatedElements = modalContent.querySelectorAll('.animate__animated');
+                animatedElements.forEach(el => el.classList.remove('animate__animated', 'animate__fadeInUp'));
+
+                // Hide buttons
+                actions.style.display = 'none';
+
+                // Save current style
+                const originalOverflow = modalContent.style.overflow;
+                const originalHeight = modalContent.style.height;
+                const originalMaxHeight = modalContent.style.maxHeight;
+
+                // Expand to full size for capture
+                modalContent.style.overflow = 'visible';
+                modalContent.style.height = 'auto'; // Force auto height
+                modalContent.style.maxHeight = 'none';
+
+                // Convert images to base64
+                await convertImagesToBase64(modalContent);
+
+                // Allow layout to settle
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                const canvas = await html2canvas(modalContent, {
+                    scale: 2,
+                    backgroundColor: '#001B48',
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true,
+                    imageTimeout: 0,
+                    height: modalContent.scrollHeight, // Force capture of full scroll height
+                    width: modalContent.scrollWidth,
+                    windowHeight: modalContent.scrollHeight
+                });
+
+                // Restore styles immediately
+                modalContent.style.overflow = originalOverflow;
+                modalContent.style.height = originalHeight;
+                modalContent.style.maxHeight = originalMaxHeight;
+                actions.style.display = 'flex';
+
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                const pageWidth = 210;
+                const pageHeight = 297;
+                const imgWidth = pageWidth;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                let heightLeft = imgHeight;
+                let position = 0;
+
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                pdf.save('CV_Complet_Joueur_LPA.pdf');
+            } catch (error) {
+                console.error('Erreur génération PDF:', error);
+                alert('Erreur: ' + error.message);
+                actions.style.display = 'flex';
+                // Ensure styles are restored on error
+                modalContent.style.overflow = '';
+                modalContent.style.height = '';
+                modalContent.style.maxHeight = '';
+            }
+        }
+
+        async function downloadImage() {
+            const modalContent = document.querySelector('.modal-content');
+            const actions = document.querySelector('.modal-actions');
+
+            try {
+                // Remove animations
+                const animatedElements = modalContent.querySelectorAll('.animate__animated');
+                animatedElements.forEach(el => el.classList.remove('animate__animated', 'animate__fadeInUp'));
+
+                // Hide buttons
+                actions.style.display = 'none';
+
+                // Save current style
+                const originalOverflow = modalContent.style.overflow;
+                const originalHeight = modalContent.style.height;
+                const originalMaxHeight = modalContent.style.maxHeight;
+
+                // Expand to full size for capture
+                modalContent.style.overflow = 'visible';
+                modalContent.style.height = 'max-content'; // Ensure full content is visible
+                modalContent.style.maxHeight = 'none';
+
+                // Convert images
+                await convertImagesToBase64(modalContent);
+
+                // Wait for layout
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                const canvas = await html2canvas(modalContent, {
+                    scale: 2,
+                    backgroundColor: '#001B48',
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true,
+                    imageTimeout: 0,
+                    height: modalContent.scrollHeight,
+                    width: modalContent.scrollWidth,
+                    windowHeight: modalContent.scrollHeight // Crucial for scrolling capture
+                });
+
+                // Restore styles
+                modalContent.style.overflow = originalOverflow;
+                modalContent.style.height = originalHeight;
+                modalContent.style.maxHeight = originalMaxHeight;
+                actions.style.display = 'flex';
+
+                const link = document.createElement('a');
+                link.download = 'CV_Complet_Joueur_LPA.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (error) {
+                console.error('Erreur génération image:', error);
+                alert('Erreur: ' + error.message);
+                actions.style.display = 'flex';
+                // Ensure styles are restored
+                modalContent.style.overflow = '';
+                modalContent.style.height = '';
+                modalContent.style.maxHeight = '';
+            }
+        }
+
+        async function downloadLicense() {
+            const licenseCard = document.querySelector('.license-card');
+            if (!licenseCard) {
+                alert('Aucune licence trouvée pour ce joueur.');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+
+            try {
+                // Convert images to base64 to ensure they are captured
+                await convertImagesToBase64(licenseCard);
+
+                const canvas = await html2canvas(licenseCard, {
+                    scale: 2,
+                    backgroundColor: '#001B48',
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true,
+                    imageTimeout: 0,
+                    height: licenseCard.scrollHeight,
+                    width: licenseCard.scrollWidth
+                });
+
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                // Calculate dimensions to fit the license nicely on the page
+                const pageWidth = 210;
+                const pageHeight = 297;
+                const imgAspectRatio = canvas.width / canvas.height;
+                let imgWidth = pageWidth * 0.8; // 80% of page width
+                let imgHeight = imgWidth / imgAspectRatio;
+
+                // If too tall, scale down
+                if (imgHeight > pageHeight * 0.6) {
+                    imgHeight = pageHeight * 0.6;
+                    imgWidth = imgHeight * imgAspectRatio;
+                }
+
+                // Center the image
+                const x = (pageWidth - imgWidth) / 2;
+                const y = (pageHeight - imgHeight) / 2;
+
+                pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
+                pdf.save('Licence_Joueur_LPA.pdf');
+            } catch (error) {
+                console.error('Erreur génération licence PDF:', error);
+                alert('Erreur lors de la génération de la licence PDF');
+            }
+        }
+
+        function printCV() {
+            const modalContent = document.querySelector('.modal-content');
+            const printWindow = window.open('', '', 'height=800,width=600');
+
+            printWindow.document.write('<html><head><title>CV Complet Joueur - LPA</title>');
+            printWindow.document.write('<style>');
+            printWindow.document.write(`
+                body {
+                    font-family: Arial, sans-serif;
+                    background: #001B48;
+                    color: #F8FAFC;
+                    padding: 20px;
+                    margin: 0;
+                }
+                .modal-header {
+                    padding: 40px;
+                    background: rgba(0, 0, 0, 0.2);
+                    text-align: center;
+                    border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+                }
+                .modal-header img {
+                    width: 150px;
+                    height: 150px;
+                    border-radius: 50%;
+                    border: 4px solid #FFD700;
+                    object-fit: cover;
+                    margin: 0 auto 20px auto;
+                    display: block;
+                }
+                .license-card {
+                    background: linear-gradient(135deg, #001B48 0%, #000B1E 100%);
+                    border: 2px solid #FFD700;
+                    border-radius: 15px;
+                    padding: 15px;
+                    margin-bottom: 20px;
+                }
+                .detail-section {
+                    margin-bottom: 20px;
+                }
+                .detail-title {
+                    color: #FFD700;
+                    text-transform: uppercase;
+                    font-weight: 800;
+                    font-size: 0.9rem;
+                    margin-bottom: 10px;
+                    border-left: 3px solid #FFD700;
+                    padding-left: 10px;
+                }
+                .modal-actions { display: none !important; }
+                
+                /* Print Styles for Federation Card */
+                .license-card {
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+                    max-width: 800px;
+                    border: 1px solid #000;
+                    margin: 0 auto;
+                    background: #fff !important;
+                    color: #000 !important;
+                    page-break-inside: avoid;
+                    position: relative;
+                }
+                .license-right-strip {
+                    background: #fff !important;
+                    border-left: 2px solid #000;
+                }
+                .license-photo-frame-fed {
+                    border: 3px solid #000;
+                }
+                .license-footer-strip {
+                    background: #eee !important;
+                    border-top: 2px solid #000;
+                    print-color-adjust: exact;
+                    -webkit-print-color-adjust: exact;
+                }
+                .license-vertical-text {
+                    color: #000;
+                }
+                .license-role-label, .license-meta-grid {
+                    color: #000 !important;
+                }
+                .license-club-name, .license-fed-name {
+                    color: #000 !important;
+                }
+            `);
+
+            printWindow.document.write('</style></head><body>');
+            printWindow.document.write(modalContent.innerHTML);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+
+            setTimeout(() => {
+                printWindow.print();
+            }, 500);
+        }
+
+        // Initialize the page when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('Page CV Players chargée, initialisation...');
+            loadScoutPlayers();
+        });
+    </script>
+</body>
+
+</html>

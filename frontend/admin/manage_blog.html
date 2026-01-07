@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion du Blog – Administrateur</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", sans-serif;
+            background: #0A2342;
+            color: #F8FAFC;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #001B48;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 25px;
+            border-right: 2px solid #FFD70040;
+        }
+
+        .sidebar h2 {
+            font-size: 26px;
+            color: #FFD700;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            color: #F8FAFC;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: 0.25s;
+        }
+
+        .sidebar a:hover {
+            background: #FFD70033;
+        }
+
+        .sidebar .logout {
+            background: #8A0303;
+            font-weight: bold;
+            margin-top: 40px;
+        }
+
+        .content {
+            margin-left: 260px;
+            padding: 40px;
+            width: 100%;
+        }
+
+        .card {
+            background: #001B48;
+            border: 1px solid #FFD70033;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        h1,
+        h2 {
+            color: #FFD700;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            color: #FFD700;
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            border-radius: 8px;
+            background: #0A2342;
+            color: white;
+            border: 1px solid #FFD70055;
+        }
+
+        .btn-main {
+            padding: 12px 20px;
+            background: #FFD700;
+            border: none;
+            color: #001B48;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .blog-list {
+            margin-top: 30px;
+        }
+
+        .blog-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-delete {
+            background: #8A0303;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>⚽ LPA</h2>
+        <a href="manage_teams.html">📋 Gestion des équipes</a>
+        <a href="dashboard.html">🎯 Faire un tirage</a>
+        <a href="manage_blog.html" style="background: #FFD70033;">📰 Gestion du Blog</a>
+        <a href="manage_matches.html">🏟 Matchs</a>
+        <a href="manage_players.html">👥 Joueurs</a>
+        <a href="../index.html">🌍 Page publique</a>
+        <a href="../../backend/auth/logout.php" class="logout">🚪 Déconnexion</a>
+    </div>
+
+    <div class="content">
+        <h1>📰 Gestion du Blog</h1>
+        <p>Ajoutez ou supprimez des articles d'actualité pour le public.</p>
+
+        <div class="card">
+            <h2>✍️ Nouvel Article</h2>
+            <label>Titre de l'article</label>
+            <input type="text" id="blogTitle" placeholder="Ex: Grande finale ce soir !">
+
+            <label>Image de l'article (Importer un fichier)</label>
+            <input type="file" id="blogImageFile" accept="image/*" onchange="previewImage(this)">
+            <div id="imagePreviewContainer" style="margin-top: 10px; display:none;">
+                <img id="imagePreview" src="" style="max-width: 200px; border-radius: 10px; border: 1px solid #FFD700;">
+                <p id="uploadStatus" style="font-size: 13px; color: #FFD700;"></p>
+            </div>
+
+            <label>Contenu</label>
+            <textarea id="blogContent" rows="5"></textarea>
+
+            <button class="btn-main" id="btnPublish" onclick="addPost()">Publier l'article</button>
+        </div>
+
+        <div class="card blog-list">
+            <h2>Liste des articles</h2>
+            <div id="postsContainer">
+                <!-- Chargé via JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let uploadedImageUrl = "";
+
+        function previewImage(input) {
+            const container = document.getElementById('imagePreviewContainer');
+            const img = document.getElementById('imagePreview');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    img.src = e.target.result;
+                    container.style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        async function loadPosts() {
+            const res = await fetch('../../backend/api/blog_list.php');
+            const data = await res.json();
+            const container = document.getElementById('postsContainer');
+            container.innerHTML = "";
+
+            if (data.success && data.data) {
+                data.data.forEach(p => {
+                    container.innerHTML += `
+                        <div class="blog-item">
+                            <div style="display:flex; align-items:center; gap:15px;">
+                                <img src="${p.image_url || '../assets/img/default_news.jpg'}" style="width:50px; height:50px; object-fit:cover; border-radius:5px;">
+                                <div>
+                                    <strong style="color:#FFD700">${p.title}</strong><br>
+                                    <small>${p.created_at}</small>
+                                </div>
+                            </div>
+                            <button class="btn-delete" onclick="deletePost(${p.id})">Supprimer</button>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        async function addPost() {
+            const btn = document.getElementById('btnPublish');
+            const title = document.getElementById('blogTitle').value;
+            const content = document.getElementById('blogContent').value;
+            const fileInput = document.getElementById('blogImageFile');
+
+            if (!title || !content) return alert("Titre et contenu obligatoires");
+
+            btn.disabled = true;
+            btn.innerText = "Téléchargement de l'image...";
+
+            let imageUrl = "";
+
+            // 1. Upload de l'image si présente
+            if (fileInput.files.length > 0) {
+                const formData = new FormData();
+                formData.append('image', fileInput.files[0]);
+
+                try {
+                    const uploadRes = await fetch('../../backend/api/upload_blog_image.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const uploadData = await uploadRes.json();
+                    if (uploadData.success) {
+                        imageUrl = uploadData.data.url;
+                    } else {
+                        alert("Erreur upload image : " + uploadData.message);
+                        btn.disabled = false;
+                        btn.innerText = "Publier l'article";
+                        return;
+                    }
+                } catch (e) {
+                    alert("Erreur serveur lors de l'upload");
+                    btn.disabled = false;
+                    btn.innerText = "Publier l'article";
+                    return;
+                }
+            }
+
+            // 2. Création de l'article
+            btn.innerText = "Publication en cours...";
+
+            const res = await fetch('../../backend/api/blog_add.php', {
+                method: 'POST',
+                body: JSON.stringify({ title, content, image_url: imageUrl })
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert("Article publié !");
+                location.reload();
+            } else {
+                alert("Erreur: " + data.message);
+                btn.disabled = false;
+                btn.innerText = "Publier l'article";
+            }
+        }
+
+        async function deletePost(id) {
+            if (!confirm("Supprimer cet article ?")) return;
+            const res = await fetch('../../backend/api/blog_delete.php', {
+                method: 'POST',
+                body: JSON.stringify({ id })
+            });
+            const data = await res.json();
+            if (data.success) {
+                loadPosts();
+            } else {
+                alert("Erreur: " + data.message);
+            }
+        }
+
+        loadPosts();
+    </script>
+</body>
+
+</html>

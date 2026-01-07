@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ligue Pro Des Academies – Résultats & Classements</title>
+
+  <!-- Google Fonts: Poppins (Premium Clean Look) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --primary: #020617;
+      --secondary: #0f172a;
+      --accent: #FFD700;
+      --accent-glow: rgba(255, 215, 0, 0.4);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --glass: rgba(15, 23, 42, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --accent-gradient: linear-gradient(135deg, #FFD700 0%, #FDB931 100%);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: var(--primary);
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ✨ PREMIUM BACKGROUND SYSTEM */
+    .bg-mesh {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(30, 58, 138, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(15, 23, 42, 0.5) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, #020617 0%, #020617 100%);
+    }
+
+    .bg-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 30px 30px;
+      opacity: 0.5;
+    }
+
+    .bg-glow {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(29, 78, 216, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      z-index: -1;
+      filter: blur(80px);
+      animation: float-glow 20s infinite alternate;
+    }
+
+    @keyframes float-glow {
+      0% {
+        top: -10%;
+        left: -10%;
+      }
+
+      100% {
+        top: 60%;
+        left: 70%;
+      }
+    }
+
+    /* 💎 NAVBAR PREMIUM SPICY */
+    .public-navbar {
+      background: rgba(2, 6, 23, 0.7);
+      backdrop-filter: blur(25px) saturate(200%);
+      -webkit-backdrop-filter: blur(25px) saturate(200%);
+      padding: 10px 40px;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 215, 0, 0.05);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body.has-ticker .public-navbar {
+      top: 60px;
+    }
+
+    .public-navbar:hover {
+      background: rgba(2, 6, 23, 0.85);
+      border-bottom-color: rgba(255, 215, 0, 0.4);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      transition: all 0.4s;
+      position: relative;
+    }
+
+    .nav-brand:hover {
+      transform: scale(1.08) rotate(-2deg);
+    }
+
+    .nav-brand::before {
+      content: '';
+      position: absolute;
+      width: 150%;
+      height: 150%;
+      background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .nav-brand:hover::before {
+      opacity: 1;
+    }
+
+    .nav-brand-text {
+      font-weight: 900;
+      font-size: 1.6rem;
+      letter-spacing: 3px;
+      background: linear-gradient(135deg, #FFF 0%, #FFD700 50%, #FFA500 100%);
+      background-size: 200% auto;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      animation: navShimmer 4s linear infinite;
+      filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+    }
+
+    @keyframes navShimmer {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      100% {
+        background-position: 200% 50%;
+      }
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .public-navbar a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+    }
+
+    .public-navbar a:hover {
+      color: #fff;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+      transform: translateY(-3px);
+    }
+
+    .public-navbar a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 3px;
+      background: linear-gradient(to right, transparent, var(--accent), transparent);
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: 0 0 15px var(--accent);
+      border-radius: 99px;
+    }
+
+    .public-navbar a:hover::after {
+      width: 110%;
+    }
+
+    .public-navbar a i {
+      font-size: 1rem;
+      transition: transform 0.3s;
+    }
+
+    .public-navbar a:hover i {
+      transform: scale(1.3) rotate(10deg);
+    }
+
+    /* 🏆 HERO HEADER */
+    header {
+      text-align: center;
+      padding: 120px 20px 100px;
+      background: linear-gradient(to bottom, transparent 0%, rgba(2, 6, 23, 0.8) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header h1 {
+      font-size: clamp(40px, 8vw, 84px);
+      font-weight: 800;
+      margin: 0;
+      text-transform: uppercase;
+      font-size: 80px;
+      font-weight: 900;
+      margin: 0;
+      background: linear-gradient(to bottom, #fff, #FFD700);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.3));
+      line-height: 0.9;
+      animation:
+        revealTitle 1.5s cubic-bezier(0.77, 0, 0.175, 1) forwards,
+        shimmer 4s linear infinite 1.5s;
+    }
+
+    @keyframes revealTitle {
+      0% {
+        transform: translateY(30px);
+        opacity: 0;
+        filter: blur(10px);
+      }
+
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+        filter: blur(0);
+      }
+    }
+
+    @keyframes shimmer {
+      to {
+        background-position: 200% center;
+      }
+    }
+
+    header p {
+      margin-top: 30px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 6px;
+      background: linear-gradient(to right, #94a3b8 0%, #fff 50%, #94a3b8 100%);
+      background-size: 200% auto;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation:
+        revealSub 1.5s cubic-bezier(0.77, 0, 0.175, 1) 0.5s forwards,
+        subtitleShimmer 4s linear infinite;
+      display: inline-block;
+      padding: 5px 20px;
+      position: relative;
+    }
+
+    header p::before,
+    header p::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--accent));
+    }
+
+    header p::before {
+      left: -50px;
+    }
+
+    header p::after {
+      right: -50px;
+      background: linear-gradient(to left, transparent, var(--accent));
+    }
+
+    @keyframes subtitleShimmer {
+      to {
+        background-position: 200% center;
+      }
+    }
+
+    @keyframes revealSub {
+      0% {
+        transform: translateY(20px);
+        opacity: 0;
+        letter-spacing: 0px;
+      }
+
+      100% {
+        transform: translateY(0);
+        opacity: 0.9;
+        letter-spacing: 6px;
+      }
+    }
+
+    @keyframes breathing {
+
+      0%,
+      100% {
+        opacity: 0.5;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.9;
+        transform: scale(1.02);
+      }
+    }
+
+    /* 📦 SECTIONS MODERNES */
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    .section {
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      padding: 40px;
+      border-radius: 24px;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      margin-bottom: 60px;
+      transition: transform 0.4s, border-color 0.4s;
+    }
+
+    .section:hover {
+      border-color: rgba(255, 215, 0, 0.3);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 35px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .section h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    /* 🎛️ FILTRES */
+    .filters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+    }
+
+    label {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      color: var(--text-muted);
+    }
+
+    select {
+      width: 100%;
+      padding: 16px 20px;
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      font-size: 15px;
+      transition: all 0.3s;
+      appearance: none;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23FFD700'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 20px center;
+      background-size: 18px;
+    }
+
+    select option {
+      background-color: #020617;
+      /* Fond sombre pour les options */
+      color: #fff;
+      padding: 10px;
+    }
+
+    select:hover,
+    select:focus {
+      background-color: rgba(255, 255, 255, 0.08);
+      border-color: var(--accent);
+      outline: none;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
+    }
+
+    /* 🔘 CHIPS DE SELECTION */
+    .chips-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .selection-chip {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--glass-border);
+      padding: 10px 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .chip-logo-container {
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      transition: all 0.3s;
+    }
+
+    .selection-chip:hover .chip-logo-container,
+    .selection-chip.active .chip-logo-container {
+      background: #fff;
+      transform: scale(1.1);
+    }
+
+    .chip-logo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .chip-text {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .chip-text small {
+      display: block;
+      font-size: 11px;
+      opacity: 0.7;
+      margin-top: 2px;
+    }
+
+    .selection-chip:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 215, 0, 0.3);
+      transform: translateY(-2px);
+      color: #fff;
+    }
+
+    .selection-chip.active {
+      background: var(--accent-gradient);
+      color: #020617;
+      border-color: var(--accent);
+      font-weight: 700;
+      box-shadow: 0 5px 15px var(--accent-glow);
+    }
+
+    .selection-chip.active i {
+      color: #020617;
+    }
+
+    /* 🃏 CARTES */
+    .grid-poules {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+    }
+
+    .poule-card {
+      background: rgba(255, 255, 255, 0.02);
+      padding: 25px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .poule-card:hover {
+      transform: translateY(-8px);
+      background: rgba(255, 255, 255, 0.04);
+      border-color: var(--accent);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .poule-title {
+      font-size: 20px;
+      color: var(--accent);
+      margin-bottom: 20px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* 🥅 EQUIPES & MATCHS */
+    .team-row,
+    .match-row {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border-radius: 12px;
+      transition: background 0.3s;
+    }
+
+    .team-row:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .team-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      padding: 2px;
+      background: #fff;
+      object-fit: contain;
+      margin-right: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .match-row {
+      justify-content: space-between;
+      background: rgba(0, 0, 0, 0.3);
+      margin-bottom: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 20px;
+    }
+
+    .score-badge {
+      background: var(--accent-gradient);
+      color: #020617;
+      padding: 8px 24px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 22px;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    /* 📊 TABLES */
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+    }
+
+    table th {
+      color: var(--text-muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 15px;
+      font-weight: 600;
+    }
+
+    table td {
+      background: rgba(255, 255, 255, 0.02);
+      padding: 18px;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    table tr td:first-child {
+      border-left: 1px solid rgba(255, 255, 255, 0.03);
+      border-top-left-radius: 16px;
+      border-bottom-left-radius: 16px;
+    }
+
+    table tr td:last-child {
+      border-right: 1px solid rgba(255, 255, 255, 0.03);
+      border-top-right-radius: 16px;
+      border-bottom-right-radius: 16px;
+    }
+
+    /* ICONES FONTAWESOME */
+    .icon-fa {
+      color: var(--accent);
+      filter: drop-shadow(0 0 8px var(--accent-glow));
+    }
+
+    /* 🔍 SEARCH BAR */
+    .search-container {
+      position: relative;
+      margin-left: auto;
+    }
+
+    .search-input {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 12px 20px 12px 45px;
+      color: #fff;
+      width: 280px;
+      transition: all 0.4s;
+    }
+
+    .search-input:focus {
+      width: 350px;
+      border-color: var(--accent);
+      background: rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .search-container i {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent);
+    }
+
+    /* 📥 EXPORT BUTTON */
+    .btn-export {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-export:hover {
+      background: var(--accent-gradient);
+      color: #000;
+      transform: scale(1.05);
+    }
+
+    /* 🌑 FOOTER */
+    footer {
+      text-align: center;
+      padding: 60px 20px;
+      background: rgba(0, 0, 0, 0.4);
+      border-top: 1px solid var(--glass-border);
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 20px;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      font-size: 20px;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+
+    /* 💬 CHAT WIDGET */
+    .chat-bubble {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: var(--accent-gradient);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #020617;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 10px 30px var(--accent-glow);
+      z-index: 2000;
+      transition: transform 0.3s;
+      animation: bubblePulse 2s infinite;
+    }
+
+    @keyframes bubblePulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4);
+        transform: scale(1);
+      }
+
+      70% {
+        box-shadow: 0 0 0 15px rgba(255, 215, 0, 0);
+        transform: scale(1.05);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+        transform: scale(1);
+      }
+    }
+
+    .chat-bubble:hover {
+      transform: scale(1.1) rotate(10deg);
+      animation: none;
+      /* Stop pulse on hover for cleaner interaction */
+    }
+
+    .chat-window {
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      width: 350px;
+      height: 500px;
+      background: var(--glass);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      display: none;
+      flex-direction: column;
+      z-index: 2000;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    }
+
+    .chat-header {
+      padding: 15px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-header h3 {
+      margin: 0;
+      font-size: 16px;
+      color: var(--accent);
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chat-msg {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 10px 15px;
+      border-radius: 12px;
+      font-size: 13px;
+      max-width: 85%;
+    }
+
+    .chat-msg .name {
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .chat-input-area {
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.2);
+      border-top: 1px solid var(--glass-border);
+      display: flex;
+      gap: 10px;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 8px 12px;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .chat-send {
+      background: var(--accent-gradient);
+      border: none;
+      border-radius: 10px;
+      width: 40px;
+      height: 40px;
+      color: #020617;
+      cursor: pointer;
+    }
+
+    /* 📰 BLOG CARDS */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+    }
+
+    .blog-card {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.4s;
+    }
+
+    .blog-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+    }
+
+    .blog-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      opacity: 0.8;
+    }
+
+    .blog-content {
+      padding: 20px;
+    }
+
+    .blog-date {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .blog-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    /* 🏆 STATS PODIUM & CHART */
+    .stats-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    .podium-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 15px;
+      padding: 20px 0;
+      min-height: 250px;
+    }
+
+    .podium-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      width: 120px;
+      padding: 20px 10px;
+      text-align: center;
+      transition: transform 0.4s;
+      position: relative;
+    }
+
+    .podium-card:hover {
+      transform: translateY(-10px);
+      border-color: var(--accent);
+    }
+
+    .podium-1 {
+      height: 220px;
+      border: 2px solid #FFD700;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+    }
+
+    .podium-2 {
+      height: 180px;
+      border: 1px solid #C0C0C0;
+    }
+
+    .podium-3 {
+      height: 150px;
+      border: 1px solid #CD7F32;
+    }
+
+    .podium-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      margin: 0 auto 15px;
+      background: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 24px;
+      color: var(--primary);
+      border: 2px solid var(--accent);
+      object-fit: cover;
+    }
+
+    .podium-name {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 5px;
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .podium-team {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: block;
+    }
+
+    .podium-score {
+      display: block;
+      margin-top: 15px;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .crown {
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #FFD700;
+      font-size: 24px;
+      filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+    }
+
+    .chart-container-public {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 20px;
+      border: 1px solid var(--glass-border);
+      padding: 20px;
+      height: 350px;
+    }
+
+    /* 🤝 SPONSORS SLIDER */
+    .sponsors-slider {
+      overflow: hidden;
+      padding: 20px 0;
+      position: relative;
+    }
+
+    .sponsors-track {
+      display: flex;
+      gap: 50px;
+      align-items: center;
+      width: max-content;
+      animation: scrollSponsors 20s linear infinite;
+    }
+
+    .sponsor-logo {
+      height: 60px;
+      filter: grayscale(100%) brightness(1.5);
+      opacity: 0.7;
+      transition: all 0.3s;
+    }
+
+    .sponsor-logo:hover {
+      filter: none;
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    @keyframes scrollSponsors {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* 🏅 PALMARES CARD */
+    .palmares-card {
+      text-align: center;
+      border: 1px solid var(--accent-glow);
+      padding: 30px !important;
+    }
+
+    .palmares-year {
+      font-size: 14px;
+      color: var(--accent);
+      font-weight: 800;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 1024px) {
+      .stats-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .nav-stats-highlight {
+      border: 1px solid var(--accent);
+      padding: 6px 15px !important;
+      border-radius: 99px;
+      background: rgba(255, 215, 0, 0.05);
+    }
+
+    .live-badge {
+      font-size: 9px;
+      background: var(--accent-gradient);
+      color: #000;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      vertical-align: middle;
+      animation: pulse-glow 2s infinite;
+    }
+
+    @keyframes pulse-glow {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4);
+      }
+
+      70% {
+        box-shadow: 0 0 0 6px rgba(255, 215, 0, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .public-navbar {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+
+      .nav-links {
+        gap: 15px;
+        flex-wrap: wrap;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .nav-brand-text {
+        font-size: 1.3rem;
+        letter-spacing: 2px;
+      }
+
+      .search-container {
+        width: 100%;
+      }
+
+      .search-input {
+        width: 100% !important;
+      }
+
+      header h1 {
+        font-size: 32px;
+        letter-spacing: 4px;
+      }
+
+      header p {
+        font-size: 0.9rem;
+        letter-spacing: 3px;
+        padding: 5px 10px;
+      }
+
+      header p::before,
+      header p::after {
+        display: none;
+      }
+
+      .premium-title {
+        font-size: 1.8rem;
+      }
+
+      .partnership-title {
+        font-size: 1.5rem;
+      }
+
+      .partnership-text {
+        font-size: 0.95rem;
+      }
+
+      .btn-partner {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav-links a {
+        font-size: 11px;
+        gap: 5px;
+      }
+
+      .chips-container {
+        justify-content: center;
+      }
+    }
+
+    /* ✨ PREMIUM TITLE */
+    .premium-title-container {
+      text-align: center;
+      margin-bottom: 50px;
+      position: relative;
+      padding: 30px;
+      background: radial-gradient(circle, rgba(255, 215, 0, 0.05) 0%, transparent 70%);
+      border-radius: 30px;
+    }
+
+    .premium-title {
+      font-size: 2.8rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      background: linear-gradient(to right, #FFF, #FFD700, #FDB931, #FFF);
+      background-size: 200% auto;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 4s linear infinite;
+      margin: 15px 0;
+      display: inline-block;
+      filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
+    }
+
+    .premium-subtitle {
+      color: #C7D3E8;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .premium-icon {
+      font-size: 3.5rem;
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(0 10px 20px rgba(255, 215, 0, 0.4));
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      50% {
+        transform: translateY(-10px) rotate(5deg);
+      }
+    }
+
+    /* ✨ PARTNERSHIP SECTION */
+    .partnership-cta {
+      margin-top: 80px;
+      padding: 60px 40px;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(2, 6, 23, 0.8) 100%);
+      border: 1px dashed rgba(255, 215, 0, 0.3);
+      border-radius: 30px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .partnership-cta::before {
+      content: '\f0a1';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      font-size: 150px;
+      opacity: 0.03;
+      color: var(--accent);
+      transform: rotate(-15deg);
+    }
+
+    .partnership-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .partnership-text {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 800px;
+      margin: 0 auto 30px;
+      line-height: 1.8;
+    }
+
+    .btn-partner {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--accent-gradient);
+      color: #020617;
+      padding: 15px 40px;
+      border-radius: 99px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      text-decoration: none;
+      transition: all 0.4s;
+      box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+    }
+
+    .btn-partner:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 15px 40px rgba(255, 215, 0, 0.5);
+    }
+
+    /* 🏆 MATCH TICKER */
+    .match-ticker-container {
+      background: rgba(2, 6, 23, 0.95);
+      border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+      padding: 10px 0;
+      overflow: hidden;
+      position: sticky;
+      top: 0;
+      z-index: 1001;
+      height: 60px;
+      display: flex;
+      align-items: center;
+    }
+
+    .match-ticker {
+      display: flex;
+      gap: 40px;
+      width: max-content;
+      animation: tickerScroll 40s linear infinite;
+      padding-left: 20px;
+    }
+
+    .match-card-ticker {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 8px 18px;
+      border-radius: 99px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      white-space: nowrap;
+      transition: all 0.3s;
+    }
+
+    .match-card-ticker:hover {
+      background: rgba(255, 215, 0, 0.1);
+      border-color: var(--accent);
+      transform: scale(1.05);
+    }
+
+    .ticker-team {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #fff;
+    }
+
+    .ticker-team img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    .ticker-score {
+      font-weight: 900;
+      font-size: 1rem;
+      color: var(--accent);
+      background: rgba(255, 215, 0, 0.1);
+      padding: 2px 10px;
+      border-radius: 6px;
+      min-width: 45px;
+      text-align: center;
+    }
+
+    .ticker-vs {
+      font-size: 0.7rem;
+      color: rgba(255, 215, 0, 0.5);
+      font-weight: 800;
+    }
+
+    .ticker-status {
+      font-size: 0.65rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 5px;
+    }
+
+    .status-live {
+      background: #ef4444;
+      color: #fff;
+      animation: pulse-glow 2s infinite;
+    }
+
+    .status-played {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .status-planned {
+      background: rgba(255, 215, 0, 0.2);
+      color: var(--accent);
+    }
+
+    @keyframes tickerScroll {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* 🛸 PARTNER TICKER */
+    .partner-ticker-wrapper {
+      margin-top: 40px;
+      overflow: hidden;
+      padding: 20px 0;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 20px;
+      -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+      mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    }
+
+    .partner-ticker {
+      display: flex;
+      gap: 50px;
+      width: max-content;
+      animation: tickerScroll 30s linear infinite;
+    }
+
+    .ticker-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: rgba(255, 255, 255, 0.4);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      white-space: nowrap;
+    }
+
+    .ticker-item i {
+      font-size: 1.2rem;
+      color: var(--accent);
+      opacity: 0.5;
+    }
+
+    @keyframes tickerScroll {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* ✨ PREMIUM LABELS */
+    .premium-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--accent);
+      font-size: 0.9rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid rgba(255, 215, 0, 0.2);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-mesh"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <!-- 🏆 MATCH TICKER -->
+  <div id="matchTickerContainer" class="match-ticker-container" style="display:none;">
+    <div id="matchTicker" class="match-ticker">
+      <!-- Generated by JS -->
+    </div>
+  </div>
+
+  <!-- 🌟 NAVBAR -->
+  <nav class="public-navbar">
+    <a href="index.html" class="nav-brand">
+      <span class="nav-brand-text">LPA</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="#selection-section"><i class="fas fa-trophy icon-fa"></i> Championnat</a>
+      <a href="#poules-section"><i class="fas fa-layer-group icon-fa"></i> Poules</a>
+      <a href="#matches-section"><i class="fas fa-futbol icon-fa"></i> Matchs</a>
+      <a href="#blog-section"><i class="fas fa-newspaper icon-fa"></i> Blog</a>
+      <a href="#standings-section"><i class="fas fa-list-ol icon-fa"></i> Classements</a>
+      <a href="#squads-section"><i class="fas fa-users icon-fa"></i> Effectifs</a>
+      <a href="boutique.html"><i class="fas fa-shopping-bag icon-fa"></i> Boutique</a>
+      <a href="reservation.html"><i class="fas fa-calendar-alt icon-fa"></i> Réservation</a>
+      <a href="cv_players.html"><i class="fas fa-id-card icon-fa"></i> Scouting</a>
+      <a href="quiz.html"><i class="fas fa-gamepad icon-fa"></i> Quiz</a>
+      <a href="#scorers-section" class="nav-stats-highlight"><i class="fas fa-chart-line icon-fa"></i> Stats <span
+          class="live-badge">Pro</span></a>
+    </div>
+
+    <div class="search-container">
+      <i class="fas fa-search"></i>
+      <input type="text" id="globalSearch" class="search-input" placeholder="Rechercher...">
+    </div>
+  </nav>
+
+
+  <!-- HEADER -->
+  <header>
+    <h1 class="animate__animated">Ligue Pro Des Academies</h1>
+    <p class="animate__animated">Plateforme Officielle des Résultats & Statistiques</p>
+
+    <!-- HERO SOFT TICKER -->
+    <div class="partner-ticker-wrapper"
+      style="max-width: 600px; margin: 20px auto 0; background: transparent; border-radius: 0; padding: 10px 0;">
+      <div class="partner-ticker" style="animation-duration: 25s; opacity: 0.6;">
+        <div class="ticker-item" style="font-size: 0.75rem; letter-spacing: 3px;"><i class="fas fa-handshake"></i>
+          Opportunité Partenariat</div>
+        <div class="ticker-item" style="font-size: 0.75rem; letter-spacing: 3px;"><i class="fas fa-chart-pie"></i> Stats
+          Centralisées</div>
+        <div class="ticker-item" style="font-size: 0.75rem; letter-spacing: 3px;"><i class="fas fa-bullhorn"></i>
+          Visibilité Maximum</div>
+        <div class="ticker-item" style="font-size: 0.75rem; letter-spacing: 3px;"><i class="fas fa-users"></i> Réseau
+          Academy</div>
+        <!-- Duplicate -->
+        <div class="ticker-item" style="font-size: 0.75rem; letter-spacing: 3px;"><i class="fas fa-handshake"></i>
+          Opportunité Partenariat</div>
+        <div class="ticker-item" style="font-size: 0.75rem; letter-spacing: 3px;"><i class="fas fa-chart-pie"></i> Stats
+          Centralisées</div>
+        <div class="ticker-item" style="font-size: 0.75rem; letter-spacing: 3px;"><i class="fas fa-bullhorn"></i>
+          Visibilité Maximum</div>
+        <div class="ticker-item" style="font-size: 0.75rem; letter-spacing: 3px;"><i class="fas fa-users"></i> Réseau
+          Academy</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- SECTION SELECTION -->
+    <div class="section" id="selection-section">
+      <div class="premium-title-container animate__animated animate__fadeIn">
+        <i class="fas fa-crown premium-icon"></i>
+        <div>
+          <h2 class="premium-title">Sélectionnez Votre Compétition</h2>
+        </div>
+        <div class="premium-subtitle">
+          <i class="fas fa-star" style="color:var(--accent); font-size: 0.8rem; vertical-align: middle;"></i>
+          <span style="margin: 0 15px;">Entrez dans la légende</span>
+          <i class="fas fa-star" style="color:var(--accent); font-size: 0.8rem; vertical-align: middle;"></i>
+        </div>
+      </div>
+      <div class="filters-grid">
+        <div style="flex: 1;">
+          <label class="premium-label"><i class="fas fa-trophy"></i> Championnat</label>
+          <div id="publicCategoryContainer" class="chips-container">
+            <!-- Chips générés par JS -->
+          </div>
+        </div>
+        <div style="flex: 1;">
+          <label class="premium-label"><i class="fas fa-code-branch"></i> Phase / Tirage</label>
+          <div id="publicDrawContainer" class="chips-container">
+            <p style="font-size:13px; color:var(--text-muted); font-style:italic;">Sélectionnez une catégorie...</p>
+          </div>
+        </div>
+      </div>
+      <div id="publicStatus" style="margin-top:15px; color:var(--accent); font-weight:600;"></div>
+    </div>
+
+    <!-- SECTION POULES -->
+    <div class="section" id="poules-section">
+      <div class="section-header">
+        <h2><i class="fas fa-layer-group icon-fa"></i> Composition des Poules</h2>
+        <button class="btn-export" data-html2canvas-ignore onclick="exportSection(event, 'publicPoules', 'Poules')">
+          <i class="fas fa-download"></i> Image
+        </button>
+      </div>
+      <div id="publicPoules" class="grid-poules">
+        <!-- Rempli par JS -->
+      </div>
+    </div>
+
+    <!-- SECTION MATCHS -->
+    <div class="section" id="matches-section">
+      <div class="section-header">
+        <h2><i class="fas fa-futbol icon-fa"></i> Matchs & Résultats</h2>
+        <button class="btn-export" data-html2canvas-ignore onclick="exportSection(event, 'publicMatches', 'Matchs')">
+          <i class="fas fa-download"></i> Image
+        </button>
+      </div>
+      <div id="publicMatches">
+        <!-- Rempli par JS -->
+      </div>
+    </div>
+
+    <!-- SECTION BLOG -->
+    <div class="section" id="blog-section">
+      <div class="section-header">
+        <h2><i class="fas fa-newspaper icon-fa"></i> Actualités & Blog</h2>
+      </div>
+      <div id="publicBlog" class="blog-grid">
+        <!-- Rempli par JS -->
+      </div>
+    </div>
+
+    <!-- SECTION CLASSEMENT -->
+    <div class="section" id="standings-section">
+      <div class="section-header">
+        <h2><i class="fas fa-list-ol icon-fa"></i> Classement Général</h2>
+        <button class="btn-export" data-html2canvas-ignore
+          onclick="exportSection(event, 'publicStandings', 'Classement')">
+          <i class="fas fa-download"></i> Image
+        </button>
+      </div>
+      <div id="publicStandings" class="grid-poules">
+        <!-- Rempli par JS -->
+      </div>
+    </div>
+
+    <!-- SECTION EFFECTIFS -->
+    <div class="section animate__animated animate__fadeInUp animate__delay-3s" id="squads-section">
+      <h2><i class="fas fa-users icon-fa"></i> Effectifs des Équipes</h2>
+      <div id="publicSquads">
+        <p style="text-align:center; color:var(--text-muted);">Sélectionnez une catégorie pour voir les effectifs.</p>
+      </div>
+    </div>
+
+    <!-- SECTION STATS -->
+    <div class="section animate__animated animate__fadeInUp" id="scorers-section">
+      <div class="section-header">
+        <h2><i class="fas fa-chart-bar icon-fa"></i> Top Buteurs & Stats</h2>
+      </div>
+      <div id="publicScorers">
+        <!-- Rempli par JS -->
+      </div>
+    </div>
+
+    <!-- SECTION FAIR-PLAY -->
+    <div class="section animate__animated animate__fadeInUp" id="fairplay-section">
+      <div class="section-header">
+        <h2><i class="fas fa-balance-scale icon-fa"></i> Classement Fair-Play</h2>
+        <p style="font-size:12px; color:var(--text-muted); margin:0;">Basé sur le cumul des cartons (Jaune = 1pt, Rouge
+          = 3pts)</p>
+      </div>
+      <div id="publicDiscipline">
+        <!-- Rempli par JS -->
+      </div>
+    </div>
+
+    <!-- SECTION PALMARÈS -->
+    <div class="section animate__animated animate__fadeInUp" id="palmares-section">
+      <div class="section-header">
+        <h2><i class="fas fa-trophy icon-fa"></i> Palmarès LPA</h2>
+      </div>
+      <div id="publicPalmares" class="grid-poules">
+        <!-- Rempli par JS -->
+      </div>
+    </div>
+
+    <!-- SECTION TERRAINS -->
+    <div class="section animate__animated animate__fadeInUp" id="terrains-section">
+      <div class="section-header">
+        <h2><i class="fas fa-map-marked-alt icon-fa"></i> Lieux de Compétition</h2>
+      </div>
+      <div id="publicTerrains" class="filters-grid">
+        <!-- Exemples de stades -->
+        <div class="poule-card">
+          <div class="poule-title">Stade Municipal</div>
+          <p style="font-size:13px; color:var(--text-muted);"><i class="fas fa-map-pin"></i> Centre Ville, Secteur 5</p>
+        </div>
+        <div class="poule-card">
+          <div class="poule-title">Terrain Annexe</div>
+          <p style="font-size:13px; color:var(--text-muted);"><i class="fas fa-map-pin"></i> Zone Sportive, Nord</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION PARTENARIAT -->
+    <div class="container">
+      <div class="partnership-cta animate__animated animate__fadeInUp">
+        <h2 class="partnership-title">Ouvrez les portes de votre championnat</h2>
+        <p class="partnership-text">
+          La Ligue Pro Des Academies est bien plus qu'une plateforme : c'est une vitrine d'élite.
+          Nous offrons l'opportunité aux autres championnats, ligues et tournois de publier leurs résultats
+          et statistiques sur notre plateforme pour bénéficier d'une visibilité professionnelle sans précédent.
+        </p>
+        <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+          <button onclick="openModal('partnerContactModal')" class="btn-partner">
+            <i class="fas fa-envelope"></i> Via Formulaire
+          </button>
+          <a href="https://wa.me/221773887672" target="_blank" class="btn-partner"
+            style="background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); border:none; box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3);">
+            <i class="fab fa-whatsapp"></i> Via WhatsApp
+          </a>
+        </div>
+
+        <!-- SOFT TICKER -->
+        <div class="partner-ticker-wrapper">
+          <div class="partner-ticker">
+            <div class="ticker-item"><i class="fas fa-globe"></i> Ligue d'Honneur</div>
+            <div class="ticker-item"><i class="fas fa-star"></i> Coupe des Espoirs</div>
+            <div class="ticker-item"><i class="fas fa-shield-halved"></i> Championnat Elite</div>
+            <div class="ticker-item"><i class="fas fa-trophy"></i> Master League</div>
+            <div class="ticker-item"><i class="fas fa-bolt"></i> Tournoi Flash</div>
+            <div class="ticker-item"><i class="fas fa-users-gear"></i> Academy Cup</div>
+            <!-- Duplicate for infinite scroll -->
+            <div class="ticker-item"><i class="fas fa-globe"></i> Ligue d'Honneur</div>
+            <div class="ticker-item"><i class="fas fa-star"></i> Coupe des Espoirs</div>
+            <div class="ticker-item"><i class="fas fa-shield-halved"></i> Championnat Elite</div>
+            <div class="ticker-item"><i class="fas fa-trophy"></i> Master League</div>
+            <div class="ticker-item"><i class="fas fa-bolt"></i> Tournoi Flash</div>
+            <div class="ticker-item"><i class="fas fa-users-gear"></i> Academy Cup</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL PARTENAIRE -->
+    <div id="partnerContactModal" class="modal">
+      <div class="modal-content animate__animated animate__zoomIn" style="max-width: 500px;">
+        <span class="close-modal" onclick="closeModal('partnerContactModal')">&times;</span>
+        <h2 class="premium-title" style="font-size: 1.8rem; margin-bottom: 25px;">
+          <i class="fas fa-handshake"></i> Devenir Partenaire
+        </h2>
+        <form id="partnerForm" onsubmit="submitPartnerRequest(event)">
+          <div class="form-group" style="margin-bottom: 20px; text-align: left;">
+            <label class="premium-label"><i class="fas fa-user"></i> Nom Complet</label>
+            <input type="text" id="partner_name" required class="search-input" style="width:100%; padding-left:20px;"
+              placeholder="Votre nom...">
+          </div>
+          <div class="form-group" style="margin-bottom: 20px; text-align: left;">
+            <label class="premium-label"><i class="fas fa-trophy"></i> Nom du Championnat</label>
+            <input type="text" id="partner_league" required class="search-input" style="width:100%; padding-left:20px;"
+              placeholder="Ex: Ligue Regionale...">
+          </div>
+          <div class="form-group" style="margin-bottom: 20px; text-align: left;">
+            <label class="premium-label"><i class="fas fa-phone"></i> Téléphone / WhatsApp</label>
+            <input type="text" id="partner_phone" required class="search-input" style="width:100%; padding-left:20px;"
+              placeholder="Ex: +221 ...">
+          </div>
+          <div class="form-group" style="margin-bottom: 25px; text-align: left;">
+            <label class="premium-label"><i class="fas fa-comment-alt"></i> Message</label>
+            <textarea id="partner_message" rows="3" class="search-input"
+              style="width:100%; padding-left:20px; height:auto; border-radius:20px;"
+              placeholder="Dites-nous en plus..."></textarea>
+          </div>
+          <button type="submit" class="btn-partner" style="width: 100%; justify-content: center;">
+            <i class="fas fa-paper-plane"></i> Envoyer ma Demande
+          </button>
+          <div id="partnerStatus" style="margin-top: 15px; font-weight: 600;"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- SECTION SPONSORS -->
+    <div class="section animate__animated animate__fadeInUp" id="sponsors-section">
+      <div class="section-header">
+        <h2><i class="fas fa-handshake icon-fa"></i> Nos Partenaires</h2>
+      </div>
+      <div class="sponsors-slider">
+        <div class="sponsors-track" id="publicSponsors">
+          <!-- Logos sponsors -->
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION BOUTIQUE PREVIEW -->
+    <div class="section animate__animated animate__fadeInUp" id="boutique-preview-section">
+      <div class="section-header">
+        <h2><i class="fas fa-shopping-bag icon-fa"></i> Boutique Officielle</h2>
+        <a href="boutique.html" class="btn-export" style="text-decoration:none;"><i class="fas fa-eye"></i> Voir
+          tout</a>
+      </div>
+      <div id="publicBoutiquePreview" class="grid-poules">
+        <!-- Rempli par JS -->
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-links">
+      <a href="#"><i class="fab fa-facebook"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+    </div>
+    <p>&copy; 2025 Ligue Pro Des Academies. Tous droits réservés.</p>
+    <p style="font-size:12px; margin-top:10px; opacity:0.6;">Propulsé par la meilleure technologie de tirage au sort.
+    </p>
+  </footer>
+
+  <div class="chat-bubble" id="chatBubble" onclick="toggleChat()">
+    <i class="fas fa-comments"></i>
+  </div>
+
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      <h3>Chat Public ⚽</h3>
+      <i class="fas fa-times" style="cursor:pointer;" onclick="toggleChat()"></i>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <!-- Messages ici -->
+      <div class="chat-msg">
+        <span class="name">Système</span>
+        Bienvenue sur le chat public ! Partagez vos pronostics !
+      </div>
+    </div>
+    <div class="chat-input-area">
+      <input type="text" id="chatNickname" class="chat-input" placeholder="Pseudo" style="width: 80px; flex:none;">
+      <input type="text" id="chatMsgInput" class="chat-input" placeholder="Votre message...">
+      <button class="chat-send" onclick="sendChatMessage()">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+  <script src="assets/js/public_index.js?v=3"></script>
+</body>
+
+</html>

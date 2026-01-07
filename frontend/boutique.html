@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boutique "TABOULOU YA MBODJA" - LPA</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+        :root {
+            --primary: #0A2342;
+            --accent: #FFD700;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background: #0A2342;
+            background: linear-gradient(-45deg, #0A2342, #1a365d, #001B48, #052c5c);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .animated-text {
+            background: linear-gradient(to right, #fff, var(--accent), #fff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 200% auto;
+            animation: shine 3s linear infinite;
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+        }
+
+        .boutique-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .product-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: var(--accent);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin-bottom: 15px;
+            background: #000;
+        }
+
+        .product-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 1.2rem;
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .btn-buy {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+        .btn-buy:hover {
+            background: #fff;
+        }
+
+        /* MODAL COMMANDE */
+        #orderModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #001B48;
+            padding: 30px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 450px;
+            border: 1px solid var(--accent);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.2);
+            color: #fff;
+            box-sizing: border-box;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            opacity: 0.7;
+            transition: 0.3s;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+            color: var(--accent);
+        }
+
+        /* CART STYLES */
+        .cart-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--accent);
+            color: var(--primary);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            transition: 0.3s;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: #fff;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .stock-badge {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 350px;
+            height: 100%;
+            background: #001B48;
+            border-left: 1px solid var(--glass-border);
+            z-index: 2000;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 30px;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-drawer.active {
+            right: 0;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-qty {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            width: 25px;
+            height: 25px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* 💬 CHAT WIDGET - Bouton déplacé à gauche pour ne pas gêner le panier */
+        .chat-bubble {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            transition: transform 0.3s;
+            animation: bubblePulse 2s infinite;
+        }
+
+        @keyframes bubblePulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4);
+                transform: scale(1);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(255, 215, 0, 0);
+                transform: scale(1.05);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+                transform: scale(1);
+            }
+        }
+
+        .chat-window {
+            position: fixed;
+            bottom: 100px;
+            left: 30px;
+            width: 350px;
+            height: 500px;
+            background: #001B48;
+            border: 1px solid var(--accent);
+            border-radius: 20px;
+            display: none;
+            flex-direction: column;
+            z-index: 2000;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-msg {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+
+        .chat-input-area {
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-send {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            border-radius: 8px;
+            padding: 0 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Retour à l'accueil</a>
+
+    <!-- 💬 CHAT WIDGET -->
+    <div class="chat-bubble" id="chatBubble" onclick="toggleChat()">
+        <i class="fas fa-comments"></i>
+    </div>
+
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <h3 style="margin:0; color:var(--accent);">Chat Public ⚽</h3>
+            <i class="fas fa-times" onclick="toggleChat()" style="cursor:pointer;"></i>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-msg">Bienvenue sur le chat !</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chatNickname" placeholder="Pseudo" style="width:70px; margin:0;">
+            <input type="text" id="chatMsgInput" placeholder="Message..." style="margin:0;">
+            <button class="chat-send" onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <div class="cart-toggle" onclick="toggleCart()">
+        <i class="fas fa-shopping-cart"></i>
+        <div class="cart-badge" id="cartCount">0</div>
+    </div>
+
+    <div class="cart-drawer" id="cartDrawer">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+            <h2 style="margin:0; color:var(--accent);">Votre Panier</h2>
+            <i class="fas fa-times" onclick="toggleCart()" style="cursor:pointer; font-size:24px;"></i>
+        </div>
+        <div id="cartItems" style="flex:1; overflow-y:auto;">
+            <!-- Rempli par JS -->
+        </div>
+        <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;">
+            <div
+                style="display:flex; justify-content:space-between; font-size:20px; font-weight:bold; margin-bottom:20px;">
+                <span>Total :</span>
+                <span id="cartTotal" style="color:var(--accent);">0 FCFA</span>
+            </div>
+            <button class="btn-buy" onclick="openOrderModal()">Valider la commande</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <header class="animate__animated animate__fadeInDown">
+            <h1 class="animated-text">TABOULOU YA MBODJA</h1>
+            <p class="animate__animated animate__fadeInUp animate__delay-1s">Affichez fièrement vos couleurs. Collection
+                officielle LPA.</p>
+        </header>
+
+        <div id="boutiqueList" class="boutique-grid">
+            <!-- Chargé dynamiquement -->
+        </div>
+    </div>
+
+    <!-- Modal de Commande -->
+    <div id="orderModal">
+        <div class="modal-content">
+            <h2 style="color:var(--accent); margin-top:0;">Finaliser votre commande</h2>
+            <p style="font-size:14px; margin-bottom:20px;">Veuillez entrer vos coordonnées pour que nous puissions
+                organiser la livraison.</p>
+
+            <input type="text" id="custName" placeholder="Votre Nom complet">
+            <input type="tel" id="custPhone" placeholder="Numéro de téléphone (Wave/OM)">
+
+            <button class="btn-buy" id="btnConfirm" onclick="submitOrder()">Confirmer la commande</button>
+            <button class="btn-buy" style="background:transparent; color:#fff; margin-top:10px;"
+                onclick="closeModal()">Annuler</button>
+            <div id="orderStatus" style="margin-top:15px; text-align:center;"></div>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+
+        async function loadProducts() {
+            const res = await fetch("../backend/api/products_list.php");
+            const data = await res.json();
+            const container = document.getElementById("boutiqueList");
+
+            if (!data.data || data.data.length === 0) {
+                container.innerHTML = "<p style='grid-column:1/-1; text-align:center;'>La boutique sera bientôt disponible avec de nouveaux articles.</p>";
+                return;
+            }
+
+            container.innerHTML = data.data.map(p => `
+            <div class="product-card animate__animated animate__zoomIn">
+                <img src="${p.image_url || 'https://via.placeholder.com/250x250?text=Maillot+LPA'}" class="product-img">
+                <span class="stock-badge">${p.stock} exemplaires en stock</span>
+                <div class="product-name">${p.name}</div>
+                <div class="product-price">${p.price} FCFA</div>
+                <button class="btn-buy" onclick='addToCart(${JSON.stringify(p).replace(/'/g, "&apos;")})'>
+                    <i class="fas fa-cart-plus"></i> Ajouter au panier
+                </button>
+            </div>
+        `).join('');
+        }
+
+        function addToCart(p) {
+            const existing = cart.find(item => item.id === p.id);
+            if (existing) {
+                if (existing.quantity < p.stock) existing.quantity++;
+            } else {
+                cart.push({ ...p, quantity: 1 });
+            }
+            updateCart();
+            document.getElementById("cartDrawer").classList.add("active");
+        }
+
+        function updateCart() {
+            const items = document.getElementById("cartItems");
+            const count = document.getElementById("cartCount");
+            const total = document.getElementById("cartTotal");
+
+            items.innerHTML = cart.map((item, idx) => `
+                <div class="cart-item">
+                    <div style="flex:1;">
+                        <div style="font-weight:bold; font-size:14px;">${item.name}</div>
+                        <div style="color:var(--accent); font-size:12px;">${item.price} FCFA</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <button class="btn-qty" onclick="changeQty(${idx}, -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="btn-qty" onclick="changeQty(${idx}, 1)">+</button>
+                    </div>
+                </div>
+            `).join('');
+
+            const sum = cart.reduce((acc, i) => acc + (i.price * i.quantity), 0);
+            total.innerText = sum + " FCFA";
+            count.innerText = cart.reduce((acc, i) => acc + i.quantity, 0);
+        }
+
+        function changeQty(idx, delta) {
+            cart[idx].quantity += delta;
+            if (cart[idx].quantity <= 0) cart.splice(idx, 1);
+            updateCart();
+        }
+
+        function toggleCart() {
+            document.getElementById("cartDrawer").classList.toggle("active");
+        }
+
+        function openOrderModal() {
+            if (cart.length === 0) { alert("Le panier est vide"); return; }
+            document.getElementById("orderModal").style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById("orderModal").style.display = 'none';
+            document.getElementById("orderStatus").innerHTML = "";
+        }
+
+        async function submitOrder() {
+            const name = document.getElementById("custName").value;
+            const phone = document.getElementById("custPhone").value;
+            const status = document.getElementById("orderStatus");
+            const btn = document.getElementById("btnConfirm");
+
+            if (!name || !phone) {
+                status.innerHTML = "<span style='color:#ef4444;'>Veuillez remplir tous les champs.</span>";
+                return;
+            }
+
+            btn.disabled = true;
+            status.innerHTML = "Envoi en cours...";
+
+            const body = {
+                customer_name: name,
+                customer_phone: phone,
+                total_price: cart.reduce((acc, i) => acc + (i.price * i.quantity), 0),
+                items: cart.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity }))
+            };
+
+            const res = await fetch("../backend/api/order_create.php", {
+                method: "POST",
+                body: JSON.stringify(body)
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                status.innerHTML = "<span style='color:#22c55e;'>Commande réussie ! Nous vous contacterons sous peu.</span>";
+                cart = [];
+                updateCart();
+                loadProducts(); // Rafraîchir le stock affiché
+                setTimeout(() => {
+                    closeModal();
+                    toggleCart();
+                }, 3000);
+            } else {
+                status.innerHTML = "<span style='color:#ef4444;'>" + data.message + "</span>";
+                btn.disabled = false;
+            }
+        }
+
+        async function toggleChat() {
+            const win = document.getElementById("chatWindow");
+            win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
+            if (win.style.display === 'flex') loadChatMessages();
+        }
+
+        async function loadChatMessages() {
+            try {
+                const resp = await fetch('../backend/api/chat_messages.php');
+                const msgs = await resp.json();
+                const container = document.getElementById("chatMessages");
+                container.innerHTML = msgs.map(m => `
+                    <div class="chat-msg"><b>${m.nickname}:</b> ${m.message}</div>
+                `).join('');
+                container.scrollTop = container.scrollHeight;
+            } catch (err) { }
+        }
+
+        async function sendChatMessage() {
+            const nick = document.getElementById("chatNickname").value || "Anonyme";
+            const msg = document.getElementById("chatMsgInput").value;
+            if (!msg) return;
+            await fetch('../backend/api/chat_send.php', {
+                method: 'POST',
+                body: JSON.stringify({ nickname: nick, message: msg })
+            });
+            document.getElementById("chatMsgInput").value = "";
+            loadChatMessages();
+        }
+
+        setInterval(() => {
+            if (document.getElementById("chatWindow").style.display === 'flex') loadChatMessages();
+        }, 5000);
+
+        window.onload = loadProducts;
+    </script>
+
+</body>
+
+</html>

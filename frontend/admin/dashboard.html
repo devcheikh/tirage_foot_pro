@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard – Tirage LPA</title>
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+
+    <style>
+        /* =============== THEME UEFA PRO =============== */
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", sans-serif;
+            background: #0A2342;
+            /* Bleu nuit */
+            color: #F8FAFC;
+            display: flex;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 260px;
+            background: #001B48;
+            /* Bleu UEFA */
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 25px;
+            border-right: 2px solid #FFD70040;
+        }
+
+        .sidebar h2 {
+            font-size: 26px;
+            color: #FFD700;
+            /* Or UEFA */
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            color: #F8FAFC;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: 0.25s;
+        }
+
+        .sidebar a:hover {
+            background: #FFD70033;
+        }
+
+        .sidebar .logout {
+            background: #8A0303;
+            font-weight: bold;
+            margin-top: 40px;
+        }
+
+        .sidebar .logout:hover {
+            background: #FF4C4C;
+        }
+
+        /* --- CONTENU --- */
+        .content {
+            margin-left: 260px;
+            padding: 40px;
+            width: 100%;
+        }
+
+        .content h1 {
+            font-size: 36px;
+            color: #FFD700;
+            margin-bottom: 10px;
+        }
+
+        .content p.subtitle {
+            color: #C3D1EA;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: #001B48;
+            border: 1px solid #FFD70033;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+            color: #FFD700;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border-radius: 8px;
+            background: #0A2342;
+            color: white;
+            border: 1px solid #FFD70055;
+        }
+
+        /* --- BOUTON PRINCIPAL --- */
+        .btn-main {
+            padding: 14px 22px;
+            margin-top: 20px;
+            background: #FFD700;
+            border: none;
+            color: #001B48;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 3px 8px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-main:hover {
+            background: #FFE45C;
+            transform: translateY(-2px);
+        }
+
+        /* --- PANNEAU RÉSULTATS --- */
+        .result-panel {
+            margin-top: 30px;
+            padding: 20px;
+            color: #FFD700;
+            font-size: 18px;
+        }
+
+        /* --- ANIMATION UEFA --- */
+        #uefaAnimation {
+            margin-top: 30px;
+            padding: 20px;
+            background: #001B48;
+            border: 1px solid #FFD70033;
+            border-radius: 12px;
+        }
+
+        .uefa-active {
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+            border-color: #FFD700AA !important;
+        }
+
+        .flash {
+            animation: flashBg 0.6s ease-out;
+        }
+
+        @keyframes flashBg {
+            from {
+                background-color: #FFD70044;
+            }
+
+            to {
+                background-color: transparent;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ========== SIDEBAR ========== -->
+    <div class="sidebar">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+            <h2 style="margin:0;">⚽ LPA</h2>
+            <div id="notifBell" style="position:relative; cursor:pointer;" onclick="toggleNotifPanel()">
+                <i class="fas fa-bell" style="color:#FFD700; font-size:20px;"></i>
+                <span id="notifBadge"
+                    style="position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:10px; padding:2px 5px; border-radius:10px; display:none;">0</span>
+            </div>
+        </div>
+
+        <div id="notifPanel"
+            style="display:none; position:absolute; top:70px; left:20px; width:220px; background:#002B70; border:1px solid #FFD70033; border-radius:8px; z-index:100; padding:10px; max-height:300px; overflow-y:auto; box-shadow:0 10px 20px rgba(0,0,0,0.5);">
+            <p
+                style="font-size:12px; font-weight:bold; border-bottom:1px solid #ffffff22; padding-bottom:5px; margin-bottom:10px;">
+                Notifications</p>
+            <div id="notifList" style="font-size:11px; line-height:1.4;"></div>
+        </div>
+
+        <a href="manage_teams.html">📋 Gestion des équipes</a>
+        <a href="manage_teams.html">📂 Gestion des catégories</a>
+        <a href="dashboard.html">🎯 Faire un tirage</a>
+        <a href="manage_extras.html">🔥 Extras</a>
+        <a href="manage_quiz.html">🎮 Quiz</a>
+        <a href="manage_boutique.html">🛒 Gestion Boutique</a>
+        <a href="manage_reservations.html">📅 Réservations Stades</a>
+        <a href="../index.html">🌍 Page publique</a>
+
+        <a href="manage_matches.html">🏟 Programmer les matchs</a>
+        <a href="matches_calendar.html">📅 Calendrier & Résultats</a>
+        <a href="manage_players.html">👥 Joueurs</a>
+        <a href="players_stats.html">📊 Statistiques</a>
+
+        <a href="../../backend/auth/logout.php" class="logout">🚪 Déconnexion</a>
+    </div>
+
+    <!-- ========== CONTENU ========== -->
+    <div class="content">
+        <h1>Dashboard Administrateur</h1>
+        <p class="subtitle">Bienvenue, sélectionnez les paramètres pour lancer un tirage UEFA.</p>
+
+        <div class="card">
+            <h2>🎯 Nouveau tirage</h2>
+
+            <label>Choisir une catégorie :</label>
+            <select id="categorySelect"></select>
+
+            <label>Type de compétition :</label>
+            <select id="competitionType">
+                <option value="groups">Tirage par poules</option>
+                <option value="league">Championnat (1 seule poule)</option>
+            </select>
+
+            <label>Nombre de poules :</label>
+            <select id="pouleCount">
+                <option value="1">1 poule</option>
+                <option value="2">2 poules</option>
+                <option value="3">3 poules</option>
+                <option value="4">4 poules</option>
+                <option value="5">5 poules</option>
+                <option value="6">6 poules</option>
+            </select>
+
+            <button id="btnDraw" class="btn-main">🎲 Faire le tirage</button>
+
+            <div id="drawResult" class="result-panel"></div>
+        </div>
+
+        <div id="uefaAnimation"></div>
+    </div>
+
+    <!-- Audio UEFA -->
+    <audio id="uefaAudio" src="../assets/audio/uefa_theme.mp3"></audio>
+
+    <script src="../assets/js/dashboard.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Gestion des équipes – LPA</title>
+
+  <link rel="stylesheet" href="../assets/css/style.css">
+
+  <style>
+    /* ===================== THEME UEFA PRO ===================== */
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #0A2342;
+      /* bleu nuit */
+      color: #F8FAFC;
+      display: flex;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 260px;
+      background: #001B48;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 25px;
+      border-right: 2px solid #FFD70040;
+    }
+
+    .sidebar h2 {
+      color: #FFD700;
+      text-align: center;
+      font-size: 26px;
+      margin-bottom: 40px;
+      font-weight: bold;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      color: #F8FAFC;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: 0.3s;
+      font-size: 16px;
+    }
+
+    .sidebar a:hover {
+      background: #FFD70033;
+    }
+
+    .sidebar .logout {
+      background: #8A0303;
+      font-weight: bold;
+      margin-top: 40px;
+    }
+
+    .sidebar .logout:hover {
+      background: #FF4C4C;
+    }
+
+    /* CONTENT AREA */
+    .content {
+      margin-left: 260px;
+      padding: 40px;
+      width: 100%;
+    }
+
+    h1 {
+      color: #FFD700;
+      font-size: 34px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #C7D3E8;
+      margin-bottom: 30px;
+    }
+
+    /* CARD PANEL */
+    .panel {
+      background: #001B48;
+      padding: 25px;
+      border-radius: 12px;
+      border: 1px solid #FFD70033;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    .panel h2 {
+      color: #FFD700;
+      margin-bottom: 15px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 12px;
+      color: #FFD700;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px;
+      background: #0A2342;
+      color: white;
+      border: 1px solid #FFD70055;
+      border-radius: 8px;
+      margin-top: 6px;
+      font-size: 15px;
+    }
+
+    /* BUTTON UEFA */
+    button,
+    .btn-main {
+      padding: 14px 20px;
+      background: #FFD700;
+      color: #001B48;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 18px;
+      font-size: 16px;
+      box-shadow: 0 4px 10px rgba(255, 215, 0, 0.4);
+      transition: 0.25s;
+    }
+
+    button:hover {
+      background: #FFE45C;
+      transform: translateY(-2px);
+    }
+
+    /* TEAM LIST */
+    .team-card {
+      background: #0A2342;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #FFD70033;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .team-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .team-logo-small {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid #FFD700;
+    }
+
+    .team-name {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .team-city {
+      font-size: 14px;
+      color: #C7D3E8;
+    }
+
+    .team-delete {
+      background: #B91C1C;
+      padding: 8px 14px;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+    }
+
+    .team-delete:hover {
+      background: #FF4C4C;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h2>⚽ LPA</h2>
+    <a href="dashboard.html">🎯 Tirage</a>
+    <a href="manage_matches.html">🏟 Programmer</a>
+    <a href="matches_calendar.html">📅 Calendrier</a>
+    <a href="manage_teams.html" class="active">📋 Équipes</a>
+    <a href="manage_players.html">👥 Joueurs</a>
+    <a href="players_stats.html">📊 Stats joueurs</a>
+    <a href="manage_extras.html">🔥 Extras</a>
+    <a href="manage_boutique.html">🛒 Boutique</a>
+    <a href="manage_reservations.html">📅 Réservations</a>
+    <a href="manage_blog.html">📰 Blog</a>
+    <a href="../index.html">🌍 Page publique</a>
+    <a href="../../backend/auth/logout.php" class="logout">🚪 Déconnexion</a>
+  </div>
+
+
+  <!-- MAIN CONTENT -->
+  <div class="content">
+
+    <h1>Gestion des équipes & catégories</h1>
+    <p class="subtitle">Ajoutez les équipes, leurs logos et les catégories LPA.</p>
+
+
+    <!-- PANEL : CATÉGORIE -->
+    <div class="panel">
+      <h2>➕ Ajouter une catégorie</h2>
+
+      <label>Nom de la catégorie (U15, U17...)</label>
+      <input id="catName" type="text" placeholder="U17">
+
+      <label>Saison</label>
+      <input id="catSeason" type="text" placeholder="2024-2025">
+
+      <label>Logo de la Ligue (pour les CV)</label>
+      <div style="display:flex; gap:10px; align-items:flex-start;">
+        <div style="flex:1;">
+          <input id="catLogoFile" type="file" accept="image/*">
+        </div>
+      </div>
+      <input id="catLogo" type="hidden">
+      <div style="margin-top: 10px;">
+        <img id="catLogoPreview" src=""
+          style="max-width: 80px; display: none; border: 1px solid #FFD700; border-radius: 5px;">
+        <span id="catLogoStatus" style="font-size: 14px; margin-left: 10px;"></span>
+      </div>
+
+      <button id="btnAddCat" class="btn-main">Ajouter la catégorie</button>
+      <div id="catStatus" class="status"></div>
+    </div>
+
+    <!-- PANEL : LISTE CATEGORIES -->
+    <div class="panel">
+      <h2>📋 Catégories existantes</h2>
+      <div id="categoriesList" style="margin-top:15px; display:grid; gap:10px;"></div>
+    </div>
+
+
+    <!-- PANEL : EQUIPE -->
+    <div class="panel">
+      <h2>➕ Ajouter une équipe</h2>
+
+      <label>Catégorie</label>
+      <select id="teamCategory"></select>
+
+      <label>Nom de l’équipe</label>
+      <input id="teamName" type="text" placeholder="Académie Tiossane">
+
+      <label>Ville (optionnel)</label>
+      <input id="teamCity" type="text" placeholder="Dakar">
+
+      <label>Logo de l'équipe</label>
+      <div style="display:flex; gap:10px; align-items:flex-start;">
+        <div style="flex:1;">
+          <input id="teamLogoFile" type="file" accept="image/*">
+        </div>
+        <button id="btnOpenLib" type="button"
+          style="margin-top:6px; background:#001B48; border:1px solid #FFD700; color:#FFD700; padding:10px;">📚
+          Bibliothèque</button>
+      </div>
+      <input id="teamLogo" type="hidden">
+      <!-- Preview du logo -->
+      <div style="margin-top: 10px;">
+        <img id="logoPreview" src=""
+          style="max-width: 80px; display: none; border: 1px solid #FFD700; border-radius: 5px;">
+        <span id="logoStatus" style="font-size: 14px; margin-left: 10px;"></span>
+      </div>
+
+      <label>Tête de série</label>
+      <select id="teamSeeded">
+        <option value="0">Non</option>
+        <option value="1">Oui</option>
+      </select>
+
+      <button id="btnAddTeam" class="btn-main">Ajouter l’équipe</button>
+      <div id="teamStatus" class="status"></div>
+    </div>
+
+
+    <!-- PANEL : LISTE DES EQUIPES -->
+    <div class="panel">
+      <h2>📋 Équipes enregistrées</h2>
+
+      <label>Choisir une catégorie</label>
+      <select id="filterCategory"></select>
+
+      <div id="teamsList" style="margin-top:15px;"></div>
+    </div>
+
+  </div>
+
+  <!-- MODAL BIBLIOTHEQUE -->
+  <div id="logoLibraryModal"
+    style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; z-index:1000;">
+    <div
+      style="background:#001B48; padding:20px; border-radius:10px; border:1px solid #FFD700; width:90%; max-width:600px; max-height:80vh; overflow-y:auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <h2 style="margin:0; color:#FFD700;">📚 Bibliothèque de Logos</h2>
+        <button id="closeLib"
+          style="background:transparent; border:none; color:white; font-size:24px; cursor:pointer;">&times;</button>
+      </div>
+      <div id="libGallery" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap:10px;">
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/js/manage_teams.js?v=105"></script>
+
+</body>
+<script>
+  (async function () {
+    const res = await fetch("../../backend/auth/check_session.php", {
+      credentials: "include"
+    });
+    const data = await res.json();
+
+    if (!data.success) {
+      window.location.href = "login.html";
+    }
+  })();
+</script>
+
+</html>

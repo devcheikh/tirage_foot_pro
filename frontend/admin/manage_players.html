@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Gestion des joueurs – LPA</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #0A2342;
+      color: #F8FAFC;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: #001B48;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 25px;
+      border-right: 2px solid #FFD70040;
+    }
+
+    .sidebar h2 {
+      color: #FFD700;
+      text-align: center;
+      font-size: 26px;
+      margin-bottom: 40px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      color: #F8FAFC;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: 0.25s;
+      font-size: 16px;
+    }
+
+    .sidebar a:hover {
+      background: #FFD70033;
+    }
+
+    .sidebar .logout {
+      background: #8A0303;
+      font-weight: bold;
+      margin-top: 40px;
+    }
+
+    .sidebar .logout:hover {
+      background: #FF4C4C;
+    }
+
+    .content {
+      margin-left: 260px;
+      padding: 40px;
+      width: 100%;
+    }
+
+    h1 {
+      color: #FFD700;
+      font-size: 34px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #C7D3E8;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: #001B48;
+      border-radius: 12px;
+      border: 1px solid #FFD70033;
+      padding: 22px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .card h2 {
+      color: #FFD700;
+      margin-bottom: 12px;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+      color: #FFD700;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid #FFD70055;
+      background: #0A2342;
+      color: #F8FAFC;
+    }
+
+    .btn-main {
+      padding: 12px 20px;
+      background: #FFD700;
+      color: #001B48;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      margin-top: 18px;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(255, 215, 0, 0.4);
+    }
+
+    .btn-main:hover {
+      background: #FFE45C;
+      transform: translateY(-2px);
+    }
+
+    .status {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .player-row {
+      background: #0A2342;
+      border-radius: 10px;
+      border: 1px solid #FFD70033;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .player-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .player-name {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .player-meta {
+      font-size: 13px;
+      color: #C7D3E8;
+    }
+
+    .btn-del {
+      background: #B91C1C;
+      border: none;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-del:hover {
+      background: #FF4C4C;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="sidebar">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 30px;">
+      <h2 style="margin:0; color:#FFD700;">⚽ LPA</h2>
+    </div>
+    <a href="dashboard.html">🎯 Tirage au Sort</a>
+    <a href="manage_matches.html">🏟 Programmer Matchs</a>
+    <a href="matches_calendar.html">📅 Calendrier & Résultats</a>
+    <a href="manage_teams.html">📋 Gestion Équipes</a>
+    <a href="manage_players.html" class="active">👥 Gestion Joueurs</a>
+    <a href="players_stats.html">📊 Statistiques Joueurs</a>
+    <a href="manage_extras.html">🔥 Gestion Extras</a>
+    <a href="manage_boutique.html">🛒 Gestion Boutique</a>
+    <a href="manage_reservations.html">📅 Réservations Stades</a>
+    <a href="manage_blog.html">📰 Gestion Blog</a>
+    <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
+    <a href="../index.html">🌍 Page Publique</a>
+    <a href="../../backend/auth/logout.php" style="color:#ef4444; margin-top:10px;">🚪 Déconnexion</a>
+  </div>
+
+  <div class="content">
+    <h1>Gestion des joueurs</h1>
+    <p class="subtitle">Ajoute les joueurs de chaque équipe et gère leur liste.</p>
+
+    <div class="card">
+      <h2 id="formTitle">➕ Ajouter un joueur</h2>
+      <input type="hidden" id="plId" value="0">
+
+      <label>Équipe</label>
+      <select id="plTeamSelectAdd"></select>
+
+      <label>Nom du joueur</label>
+      <input id="plName" type="text" placeholder="Prénom Nom">
+
+      <label>Poste</label>
+      <input id="plPosition" type="text" placeholder="Gardien, Défenseur, Milieu, Attaquant...">
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+        <div>
+          <label>Numéro</label>
+          <input id="plNumber" type="number" min="0" max="99" placeholder="10">
+        </div>
+        <div>
+          <label>Numéro de Licence</label>
+          <input id="plLicense" type="text" placeholder="Ex: L-2024-001">
+        </div>
+      </div>
+
+      <label>Date de naissance</label>
+      <input id="plBirth" type="date">
+
+      <label>Photo (optionnel)</label>
+      <div style="display:flex; align-items:flex-start; gap:15px; margin-bottom: 15px;">
+        <div style="flex:1;">
+          <input id="plPhotoFile" type="file" accept="image/*">
+          <input id="plPhoto" type="hidden"> <!-- Stores the URL -->
+          <div id="plPhotoStatus" style="font-size:12px; margin-top:4px;"></div>
+        </div>
+        <img id="plPhotoPreview" src=""
+          style="width:60px; height:60px; border-radius:50%; object-fit:cover; display:none; border:2px solid #FFD700;">
+      </div>
+
+      <div style="border-top:1px solid rgba(255,215,0,0.2); margin:20px 0; padding-top:15px;">
+        <h3 style="color:#FFD700; margin-bottom:15px;">📑 CV & Scouting (Visibilité Publique)</h3>
+
+        <label>
+          <input type="checkbox" id="plVisible" style="width:auto; margin-right:10px;">
+          Afficher ce joueur sur la page CV/Scouting
+        </label>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+          <div>
+            <label>Taille (cm)</label>
+            <input id="plHeight" type="number" step="0.1" placeholder="Ex: 175">
+          </div>
+          <div>
+            <label>Poids (kg)</label>
+            <input id="plWeight" type="number" step="0.1" placeholder="Ex: 70">
+          </div>
+        </div>
+
+        <label>Pied de prédilection</label>
+        <select id="plFoot">
+          <option value="">Sélectionner...</option>
+          <option value="Droit">Droit</option>
+          <option value="Gaucher">Gaucher</option>
+          <option value="Ambidextre">Ambidextre</option>
+        </select>
+
+        <label>Biographie / Parcours</label>
+        <textarea id="plBio"
+          style="width: 100%; padding: 10px; margin-top: 6px; border-radius: 8px; border: 1px solid #FFD70055; background: #0A2342; color: #F8FAFC; height:80px;"></textarea>
+
+        <label>Qualités / Points forts</label>
+        <input id="plSkills" type="text" placeholder="Ex: Vitesse, Dribble, Vision de jeu">
+
+        <label>Lien Vidéo (YouTube)</label>
+        <input id="plVideo" type="text" placeholder="https://www.youtube.com/watch?v=...">
+
+        <div style="border-top:1px solid rgba(255,215,0,0.2); margin:20px 0; padding-top:15px;">
+          <h4 style="color:#FFD700; margin-bottom:10px;">📊 Statistiques</h4>
+          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:15px;">
+            <div>
+              <label>Matchs Joués</label>
+              <input id="plMatches" type="number" min="0" placeholder="0">
+            </div>
+            <div>
+              <label>Buts</label>
+              <input id="plGoals" type="number" min="0" placeholder="0">
+            </div>
+            <div>
+              <label>Passes D.</label>
+              <input id="plAssists" type="number" min="0" placeholder="0">
+            </div>
+          </div>
+        </div>
+
+        <div style="border-top:1px solid rgba(255,215,0,0.2); margin:20px 0; padding-top:15px;">
+          <h4 style="color:#FFD700; margin-bottom:10px;">🌐 Réseaux Sociaux & Extra</h4>
+          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:15px;">
+            <div>
+              <label>Instagram (sans @)</label>
+              <input id="plInsta" type="text" placeholder="jdoe_football">
+            </div>
+            <div>
+              <label>Twitter (sans @)</label>
+              <input id="plTwitter" type="text" placeholder="jdoe_foot">
+            </div>
+            <div>
+              <label>LinkedIn (ID/Slug)</label>
+              <input id="plLinkedin" type="text" placeholder="john-doe-123">
+            </div>
+          </div>
+
+          <label>Devise / Motto</label>
+          <input id="plMotto" type="text" placeholder="Ex: Le travail bat le talent quand le talent ne travaille pas">
+        </div>
+
+      </div>
+
+      <button class="btn-main" id="btnPlAdd">Ajouter le joueur</button>
+      <div id="plStatus" class="status"></div>
+    </div>
+
+    <!-- 📥 IMPORT EXCEL/CSV -->
+    <div class="card animate__animated animate__fadeInUp">
+      <h2 style="display:flex; align-items:center; gap:10px;">
+        <i class="fas fa-file-excel" style="color:#22c55e;"></i> Import CSV / Excel
+      </h2>
+      <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom: 20px;">
+        Importez rapidement une liste de joueurs pour l'équipe sélectionnée.
+      </p>
+
+      <div
+        style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; border: 1px dashed rgba(255, 215, 0, 0.3);">
+        <label>1. Sélectionnez l'équipe cible</label>
+        <select id="plTeamSelectImport" style="margin-bottom: 20px;"></select>
+
+        <label>2. Préparez votre fichier</label>
+        <button onclick="downloadCSVTemplate()" class="btn-main"
+          style="background:#0A2342; border:1px solid #FFD700; color:#FFD700; margin-top:5px; margin-bottom: 20px; padding:8px 15px;">
+          <i class="fas fa-download"></i> Télécharger le modèle CSV
+        </button>
+
+        <label>3. Envoyez le fichier</label>
+        <input type="file" id="csvFile" accept=".csv" style="margin-top:10px;">
+        <button id="btnImportCSV" class="btn-main"
+          style="width:100%; margin-top:20px; background: #22c55e; color: white; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);">
+          <i class="fas fa-upload"></i> Lancer l'importation
+        </button>
+        <div id="importStatus" class="status"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📋 Joueurs par équipe</h2>
+
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <label>Filtrer par équipe:</label>
+        <button onclick="window.print()"
+          style="background:#0A2342; border:1px solid #FFD700; color:#FFD700; padding:5px 10px; border-radius:5px; cursor:pointer;">🖨️
+          Imprimer la liste</button>
+      </div>
+      <select id="plTeamFilter">
+        <option value="">-- TOUTES LES ÉQUIPES (Vue Globale) --</option>
+      </select>
+
+      <div id="plList" style="margin-top:12px;"></div>
+    </div>
+  </div>
+
+  <!-- SCRIPT EXTERNE -->
+  <script src="../assets/js/manage_players.js"></script>
+</body>
+
+</html>
