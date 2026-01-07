@@ -1831,16 +1831,13 @@
 
             // Tester l'API au chargement
             console.log('Test de l\'API players_cv_list.php...');
-            fetch('../backend/api/players_cv_list.php')
+            fetch('../api/api/players_cv_list.php')
                 .then(res => {
                     console.log('API accessible, status:', res.status);
                     return res.text();
                 })
                 .then(text => {
                     console.log('Réponse API (aperçu):', text.substring(0, 100));
-                    if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
-                        console.error('L\'API retourne du HTML au lieu de JSON - Vérifiez que XAMPP est démarré');
-                    }
                 })
                 .catch(err => {
                     console.error('API non accessible:', err);
@@ -1852,8 +1849,8 @@
         async function loadScoutPlayers() {
             console.log('=== DÉBUT loadScoutPlayers ===');
             try {
-                console.log('Tentative de fetch vers ../backend/api/players_cv_list.php');
-                const res = await fetch('../backend/api/players_cv_list.php');
+                console.log('Tentative de fetch vers ../api/api/players_cv_list.php');
+                const res = await fetch('../api/api/players_cv_list.php');
                 console.log('Réponse reçue:', res.status, res.statusText);
                 if (!res.ok) {
                     throw new Error(`Erreur HTTP: ${res.status} ${res.statusText}`);
@@ -1910,7 +1907,7 @@
                 }
             } catch (e) {
                 console.error("Erreur chargement scouting:", e);
-                const container = document.getElementById('playersContainer');
+                const container = document.getElementById('playerGrid');
                 if (container) {
                     container.innerHTML = `
                         <div style="text-align: center; padding: 50px; color: var(--text-muted);">
