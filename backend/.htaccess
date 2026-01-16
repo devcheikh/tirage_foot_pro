@@ -1,0 +1,9 @@
+# backend/.htaccess
+
+# Empêche l’indexation des dossiers
+Options -Indexes
+
+# Désactive l’affichage des erreurs PHP en prod
+<FilesMatch "\.php$">
+  php_flag display_errors Off
+</FilesMatch>
